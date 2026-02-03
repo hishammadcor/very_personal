@@ -4,92 +4,204 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>For Anan 💕</title>
-  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Aref+Ruqaa:wght@400;700&display=swap" rel="stylesheet">
+  
   <style>
+    /* RESET & BASE */
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: Georgia, serif; overflow-x: hidden; -webkit-tap-highlight-color: transparent; }
-    
-    .page { min-height: 100vh; min-height: 100dvh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 16px; position: relative; overflow: hidden; background: linear-gradient(135deg, #fce4ec 0%, #f8bbd9 25%, #e91e63 50%, #c2185b 75%, #880e4f 100%); }
-    .hidden { display: none !important; }
-    
-    .card { background: linear-gradient(145deg, rgba(255,255,255,0.95), rgba(252,228,236,0.95)); border: 3px solid #c2185b; border-radius: 24px; padding: 32px 24px; max-width: 500px; width: 100%; text-align: center; position: relative; z-index: 10; box-shadow: 0 20px 60px rgba(0,0,0,0.2); }
-    .card2 { max-width: 700px; padding: 20px 16px; animation: fadeIn 1s ease-out, glow 2s ease-in-out infinite; }
-    
-    h1 { font-size: 2rem; color: #880e4f; margin-bottom: 12px; }
-    h2 { font-size: 1.5rem; color: #880e4f; margin-bottom: 12px; }
-    .divider { width: 100px; height: 4px; background: linear-gradient(90deg, #f48fb1, #c2185b, #f48fb1); margin: 12px auto; border-radius: 4px; }
-    .subtitle { font-size: 1.1rem; color: #ad1457; margin-bottom: 8px; }
-    .date { font-size: 2rem; font-weight: bold; color: #880e4f; margin-bottom: 20px; }
-    .question { font-size: 1rem; color: #c2185b; font-style: italic; margin-bottom: 24px; line-height: 1.5; }
-    .hint { font-size: 0.85rem; color: #c2185b; font-style: italic; margin-top: 20px; }
-    
-    .buttons { display: flex; justify-content: center; gap: 24px; align-items: center; min-height: 70px; position: relative; flex-wrap: wrap; }
-    .btn-yes { padding: 14px 32px; background: linear-gradient(135deg, #e91e63, #c2185b, #880e4f); color: white; font-size: 1.1rem; font-weight: 600; border: none; border-radius: 50px; cursor: pointer; box-shadow: 0 4px 15px rgba(194,24,91,0.4); transition: transform 0.3s, box-shadow 0.3s; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
-    .btn-yes:hover, .btn-yes:active { transform: scale(1.1); box-shadow: 0 6px 25px rgba(194,24,91,0.5); }
-    .btn-no { padding: 14px 32px; background: #d7ccc8; color: #888; font-size: 1.1rem; font-weight: 600; border: none; border-radius: 50px; cursor: not-allowed; transition: transform 0.15s ease-out; position: absolute; -webkit-tap-highlight-color: transparent; }
-    
-    .photos { display: flex; justify-content: center; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; }
-    .photo { width: 150px; height: 200px; border: 4px solid #c2185b; border-radius: 16px; overflow: hidden; box-shadow: 0 8px 25px rgba(0,0,0,0.15); flex-shrink: 0; }
-    .photo img { width: 100%; height: 100%; object-fit: cover; }
-    
-    .arabic-box { background: linear-gradient(135deg, rgba(136,14,79,0.1), rgba(194,24,91,0.1)); border: 2px solid #f48fb1; border-radius: 16px; padding: 16px; margin-bottom: 16px; }
-    .arabic-text { font-family: 'Amiri', serif; font-size: 1.1rem; direction: rtl; color: #880e4f; line-height: 2; }
-    .more-text { font-family: 'Amiri', serif; color: #c2185b; margin-top: 12px; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 0.95rem; flex-wrap: wrap; }
-    
-    .footer { color: #880e4f; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 1rem; }
-    
-    .flower { position: absolute; pointer-events: none; }
-    .bg-flower { opacity: 0.5; animation: bounce 3s ease-in-out infinite; }
-    
-    #explosionContainer { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 100; }
-    .explosion-flower { position: absolute; pointer-events: none; will-change: transform, opacity; }
-    
-    #fallingContainer { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 5; overflow: hidden; }
-    .falling-flower { position: absolute; pointer-events: none; top: -60px; }
-    
-    .heart-icon { font-size: 2.5rem; display: flex; justify-content: center; align-items: center; gap: 8px; margin-bottom: 12px; }
-    .heart-icon svg { width: 40px; height: 40px; }
-    .pulse { animation: pulse 1s ease-in-out infinite; }
-    .big-heart { font-size: 5rem; animation: pulse 0.5s ease-in-out infinite; position: relative; z-index: 10; }
-    
-    @media (min-width: 481px) {
-      .card { padding: 40px; }
-      .card2 { padding: 24px; }
-      h1 { font-size: 2.5rem; }
-      h2 { font-size: 1.75rem; }
-      .date { font-size: 2.5rem; }
-      .subtitle { font-size: 1.25rem; }
-      .question { font-size: 1.1rem; }
-      .photo { width: 176px; height: 224px; }
-      .arabic-text { font-size: 1.25rem; }
-      .heart-icon svg { width: 50px; height: 50px; }
-      .heart-icon { font-size: 3rem; }
+    body { 
+      font-family: Georgia, serif; 
+      overflow-x: hidden; 
+      -webkit-tap-highlight-color: transparent;
+      background-color: #fce4ec;
     }
     
-    @media (max-width: 380px) {
-      .card { padding: 20px 16px; border-radius: 20px; }
-      h1 { font-size: 1.6rem; }
-      .date { font-size: 1.7rem; }
-      .subtitle { font-size: 1rem; }
-      .question { font-size: 0.95rem; }
-      .btn-yes, .btn-no { padding: 12px 24px; font-size: 1rem; }
-      .photo { width: 130px; height: 170px; }
-      .arabic-text { font-size: 1rem; }
-      .heart-icon svg { width: 35px; height: 35px; }
+    /* PAGE LAYOUT */
+    .page { 
+      min-height: 100vh; 
+      min-height: 100dvh; 
+      width: 100%;
+      display: flex; 
+      flex-direction: column; 
+      align-items: center; 
+      justify-content: center; 
+      padding: 20px; 
+      position: relative; 
+      background: linear-gradient(135deg, #fce4ec 0%, #f8bbd9 25%, #e91e63 50%, #c2185b 75%, #880e4f 100%); 
+      overflow-y: auto; 
+    }
+    
+    .hidden { display: none !important; }
+    
+    /* CARDS */
+    .card { 
+      background: linear-gradient(145deg, rgba(255,255,255,0.95), rgba(252,228,236,0.95)); 
+      border: 3px solid #c2185b; 
+      border-radius: 24px; 
+      padding: 30px 20px; 
+      max-width: 500px; 
+      width: 100%; 
+      text-align: center; 
+      position: relative; 
+      z-index: 10; 
+      box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+      margin: auto 0;
+    }
+    
+    .card2 { 
+      max-width: 700px; 
+      padding: 24px; 
+      animation: fadeIn 1s ease-out, glow 2s ease-in-out infinite; 
+    }
+    
+    /* TYPOGRAPHY */
+    h1 { font-size: 1.8rem; color: #880e4f; margin-bottom: 12px; line-height: 1.2; }
+    h2 { font-size: 1.6rem; color: #880e4f; margin-bottom: 12px; }
+    
+    .divider { width: 100px; height: 4px; background: linear-gradient(90deg, #f48fb1, #c2185b, #f48fb1); margin: 12px auto; border-radius: 4px; }
+    .subtitle { font-size: 1.1rem; color: #ad1457; margin-bottom: 8px; }
+    .date { font-size: 2rem; font-weight: bold; color: #880e4f; margin-bottom: 16px; }
+    .question { font-size: 1.1rem; color: #c2185b; font-style: italic; margin-bottom: 24px; line-height: 1.5; }
+    .hint { font-size: 0.85rem; color: #c2185b; font-style: italic; margin-top: 20px; opacity: 0.8; }
+    
+    /* BUTTONS */
+    .buttons { 
+      display: flex; 
+      justify-content: center; 
+      gap: 20px; 
+      align-items: center; 
+      min-height: 60px; 
+      position: relative; 
+      width: 100%;
+    }
+    
+    .btn-yes { 
+      padding: 12px 30px; 
+      background: linear-gradient(135deg, #e91e63, #c2185b, #880e4f); 
+      color: white; 
+      font-size: 1.1rem; 
+      font-weight: 600; 
+      border: none; 
+      border-radius: 50px; 
+      cursor: pointer; 
+      box-shadow: 0 4px 15px rgba(194,24,91,0.4); 
+      transition: transform 0.2s, box-shadow 0.2s; 
+      z-index: 10;
+    }
+    
+    .btn-yes:active { transform: scale(0.95); }
+    
+    .btn-no { 
+      padding: 12px 30px; 
+      background: #d7ccc8; 
+      color: #888; 
+      font-size: 1.1rem; 
+      font-weight: 600; 
+      border: none; 
+      border-radius: 50px; 
+      cursor: pointer; 
+      position: relative; 
+      transition: transform 0.2s ease-out;
+      z-index: 5;
+    }
+    
+    /* PHOTOS */
+    .photos { 
+      display: flex; 
+      justify-content: center; 
+      gap: 15px; 
+      margin-bottom: 20px; 
+      flex-wrap: wrap; 
+    }
+    
+    .photo { 
+      width: 140px; 
+      height: 190px; 
+      border: 4px solid #c2185b; 
+      border-radius: 16px; 
+      overflow: hidden; 
+      box-shadow: 0 8px 25px rgba(0,0,0,0.15); 
+      background-color: #f8bbd9;
+    }
+    
+    .photo img { width: 100%; height: 100%; object-fit: cover; }
+    
+    /* ARABIC TEXT */
+    .arabic-box { 
+      background: linear-gradient(135deg, rgba(136,14,79,0.05), rgba(194,24,91,0.05)); 
+      border: 2px solid #f48fb1; 
+      border-radius: 16px; 
+      padding: 16px; 
+      margin-bottom: 16px; 
+    }
+    
+    /* FONT SETTING: 
+      Tries to use "Shafiqa" if installed on device. 
+      If not, uses "Aref Ruqaa" (Calligraphic style) or "Amiri" (Standard style). 
+    */
+    .arabic-text { 
+      font-family: 'Shafiqa', 'Aref Ruqaa', 'Amiri', serif; 
+      font-size: 1.2rem; 
+      direction: rtl; 
+      color: #880e4f; 
+      line-height: 1.8; 
+    }
+    
+    .more-text { 
+      font-family: 'Shafiqa', 'Aref Ruqaa', 'Amiri', serif; 
+      color: #c2185b; 
+      margin-top: 12px; 
+      font-size: 1rem; 
+    }
+    
+    /* ANIMATIONS & ICONS */
+    .footer { color: #880e4f; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 1rem; }
+    
+    .heart-icon { font-size: 2.5rem; display: flex; justify-content: center; align-items: center; gap: 10px; margin-bottom: 15px; }
+    .heart-icon svg { width: 45px; height: 45px; }
+    
+    .pulse { animation: pulse 1s ease-in-out infinite; }
+    .big-heart { font-size: 5rem; animation: pulse 0.5s ease-in-out infinite; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 100; }
+    
+    /* BACKGROUND ELEMENTS */
+    .flower { position: absolute; pointer-events: none; z-index: 0; }
+    .bg-flower { opacity: 0.4; animation: bounce 4s ease-in-out infinite; }
+    
+    #explosionContainer, #fallingContainer { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 100; overflow: hidden; }
+    .explosion-flower { position: absolute; }
+    .falling-flower { position: absolute; top: -60px; }
+    
+    /* RESPONSIVE BREAKPOINTS */
+    @media (min-width: 500px) {
+      .card { padding: 40px; }
+      h1 { font-size: 2.5rem; }
+      h2 { font-size: 2rem; }
+      .photo { width: 180px; height: 240px; }
+      .arabic-text { font-size: 1.4rem; }
+    }
+    
+    @media (max-width: 360px) {
+      h1 { font-size: 1.5rem; }
+      .date { font-size: 1.5rem; }
+      .btn-yes, .btn-no { padding: 10px 20px; font-size: 1rem; }
+      .photo { width: 120px; height: 160px; }
     }
 
     @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
-    @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
-    @keyframes fadeIn { 0% { opacity: 0; transform: scale(0.8); } 100% { opacity: 1; transform: scale(1); } }
+    @keyframes pulse-icon { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
+    @keyframes fadeIn { 0% { opacity: 0; transform: scale(0.9); } 100% { opacity: 1; transform: scale(1); } }
     @keyframes glow { 0%, 100% { box-shadow: 0 0 20px rgba(194,24,91,0.5); } 50% { box-shadow: 0 0 40px rgba(194,24,91,0.8); } }
     @keyframes falling { 
       0% { transform: translateY(0) rotate(0deg); opacity: 1; } 
-      100% { transform: translateY(calc(100vh + 100px)) rotate(360deg); opacity: 0.7; } 
+      100% { transform: translateY(110vh) rotate(360deg); opacity: 0; } 
     }
   </style>
 </head>
 <body>
-  <!-- PAGE 1 -->
+
   <div id="page1" class="page">
     <div id="bgFlowers1"></div>
     <div class="card">
@@ -103,39 +215,46 @@
       <p class="subtitle">I did not forget our special day</p>
       <p class="date">✨ 13.02 ✨</p>
       <p class="question">Would you like to continue forward in this relationship?</p>
+      
       <div class="buttons">
         <button class="btn-yes" onclick="showPage2()">Yes 💖</button>
         <button class="btn-no" id="noBtn">No 😢</button>
       </div>
+      
       <p class="hint">(There's only one right answer 😉)</p>
     </div>
   </div>
 
-  <!-- PAGE 2 -->
   <div id="page2" class="page hidden">
     <div id="explosionContainer"></div>
     <div id="fallingContainer"></div>
     <div id="loadingHeart" class="big-heart">💕</div>
+    
     <div id="content" class="card card2 hidden">
       <div class="heart-icon pulse">
         <svg viewBox="0 0 100 100"><ellipse cx="50" cy="45" rx="20" ry="18" fill="#8B0000"/><ellipse cx="42" cy="42" rx="15" ry="14" fill="#B22222"/><ellipse cx="58" cy="42" rx="15" ry="14" fill="#B22222"/><ellipse cx="50" cy="35" rx="12" ry="12" fill="#DC143C"/><ellipse cx="45" cy="50" rx="14" ry="12" fill="#8B0000"/><ellipse cx="55" cy="50" rx="14" ry="12" fill="#8B0000"/><ellipse cx="50" cy="40" rx="8" ry="10" fill="#FF6B6B"/></svg>
         <span>💍</span>
         <svg viewBox="0 0 100 100"><ellipse cx="50" cy="45" rx="20" ry="18" fill="#DB7093"/><ellipse cx="42" cy="42" rx="15" ry="14" fill="#FF69B4"/><ellipse cx="58" cy="42" rx="15" ry="14" fill="#FF69B4"/><ellipse cx="50" cy="35" rx="12" ry="12" fill="#FFB6C1"/><ellipse cx="45" cy="50" rx="14" ry="12" fill="#DB7093"/><ellipse cx="55" cy="50" rx="14" ry="12" fill="#DB7093"/><ellipse cx="50" cy="40" rx="8" ry="10" fill="#FFC0CB"/></svg>
       </div>
+      
       <h2>Hesham & Anan</h2>
+      
       <div class="photos">
-        <div class="photo"><img src="https://lh3.googleusercontent.com/pw/AP1GczN0rkcEZwzWhNroykbiifVqSKsqcFAkBkhBOmqq6Dswzb7IQD1jEAib0rtvsuHN_tALt71LV7yEGJNos5PQaZ3531UGf0oC5oGsfIcSVMtU-iNIEw=w800" alt="Our rings"></div>
-        <div class="photo"><img src="https://lh3.googleusercontent.com/pw/AP1GczP9-o_nK7wbURoLw-V7caepd7l2uWHW1B4QBA9Y-HQ5MGtcn6KwE_2WMkDhZLAbv2oxXt85Kr_1es54DKUmYgWy_Pdm74_wwJzXmLD7nQHmPPS_AA=w800" alt="Our cake"></div>
+        <div class="photo"><img src="https://i.postimg.cc/MKJLJxvF/40dbc575-3ebe-4719-887d-347b4f1e53b3.jpg" alt="Rings"></div>
+        <div class="photo"><img src="https://i.postimg.cc/Nj4SxVG6/06649a69-7a8a-4253-82bc-62472303441f.jpg" alt="Cake"></div>
       </div>
+      
       <div class="arabic-box">
         <p class="arabic-text">لقد مر قرابة الشهر على هذه المناسبة. فاللهم اتممها بالخير وارزقنا الصلاح والفلاح في الدنيا والآخرة. اللهم بارك فيها وفي واحفظنا بحفظك وعينك التي لا تنام.</p>
         <div class="more-text">🌷 More to come after signatures… 🌷</div>
       </div>
+      
       <div class="footer"><span>💕</span><span>13.02</span><span>💕</span></div>
     </div>
   </div>
 
   <script>
+    /* ----- SVG DATA ----- */
     const flowerSVGs = [
       `<svg width="SIZE" height="SIZE" viewBox="0 0 100 100"><ellipse cx="50" cy="45" rx="20" ry="18" fill="#8B0000"/><ellipse cx="42" cy="42" rx="15" ry="14" fill="#B22222"/><ellipse cx="58" cy="42" rx="15" ry="14" fill="#B22222"/><ellipse cx="50" cy="35" rx="12" ry="12" fill="#DC143C"/><ellipse cx="45" cy="50" rx="14" ry="12" fill="#8B0000"/><ellipse cx="55" cy="50" rx="14" ry="12" fill="#8B0000"/><ellipse cx="50" cy="40" rx="8" ry="10" fill="#FF6B6B"/><path d="M50 58 Q50 75 50 90" stroke="#228B22" stroke-width="3" fill="none"/><ellipse cx="38" cy="70" rx="6" ry="4" fill="#2E8B2E"/></svg>`,
       `<svg width="SIZE" height="SIZE" viewBox="0 0 100 100"><ellipse cx="50" cy="45" rx="20" ry="18" fill="#DB7093"/><ellipse cx="42" cy="42" rx="15" ry="14" fill="#FF69B4"/><ellipse cx="58" cy="42" rx="15" ry="14" fill="#FF69B4"/><ellipse cx="50" cy="35" rx="12" ry="12" fill="#FFB6C1"/><ellipse cx="45" cy="50" rx="14" ry="12" fill="#DB7093"/><ellipse cx="55" cy="50" rx="14" ry="12" fill="#DB7093"/><ellipse cx="50" cy="40" rx="8" ry="10" fill="#FFC0CB"/><path d="M50 58 Q50 75 50 90" stroke="#228B22" stroke-width="3" fill="none"/><ellipse cx="62" cy="70" rx="6" ry="4" fill="#2E8B2E"/></svg>`,
@@ -148,121 +267,128 @@
       return svg.replace(/SIZE/g, size);
     }
 
-    // Runaway No button
+    /* ----- RUNAWAY BUTTON LOGIC ----- */
     const noBtn = document.getElementById('noBtn');
-    let lastMove = 0;
     
     function moveNoBtn(e) {
-      if (e) e.preventDefault();
-      const now = Date.now();
-      if (now - lastMove < 100) return;
-      lastMove = now;
+      // Prevent click if touch/mouse
+      if(e) e.preventDefault();
       
       const card = document.querySelector('.card');
       const cardRect = card.getBoundingClientRect();
-      const btnRect = noBtn.getBoundingClientRect();
       
-      const maxX = (cardRect.width / 2) - (btnRect.width / 2) - 20;
-      const maxY = 80;
+      // Calculate random movement
+      const rangeX = 120; // range in pixels
+      const rangeY = 120;
       
-      const x = (Math.random() - 0.5) * maxX * 2;
-      const y = (Math.random() - 0.5) * maxY * 2;
-      
-      noBtn.style.transform = `translate(${x}px, ${y}px)`;
+      const randomX = (Math.random() - 0.5) * rangeX * 2;
+      const randomY = (Math.random() - 0.5) * rangeY * 2;
+
+      noBtn.style.transform = `translate(${randomX}px, ${randomY}px)`;
     }
     
-    noBtn.addEventListener('mouseenter', moveNoBtn);
+    // Desktop mouse interaction
+    noBtn.addEventListener('mouseover', moveNoBtn);
+    
+    // Mobile touch interaction
     noBtn.addEventListener('touchstart', moveNoBtn, { passive: false });
-    noBtn.addEventListener('touchmove', moveNoBtn, { passive: false });
-    noBtn.addEventListener('click', function(e) { e.preventDefault(); moveNoBtn(); });
+    
+    // Fallback click
+    noBtn.addEventListener('click', moveNoBtn);
 
+    /* ----- PAGE TRANSITIONS ----- */
     function showPage2() {
-      document.getElementById('page1').classList.add('hidden');
-      document.getElementById('page2').classList.remove('hidden');
+      const p1 = document.getElementById('page1');
+      const p2 = document.getElementById('page2');
       
-      // Start explosion after a tiny delay to ensure page is visible
-      setTimeout(createExplosion, 100);
+      p1.classList.add('hidden');
+      p2.classList.remove('hidden');
       
-      // Show content after explosion
+      // 1. Start Explosion
+      setTimeout(createExplosion, 50);
+      
+      // 2. Hide loading heart & show Card 2 after animation
       setTimeout(() => {
         document.getElementById('loadingHeart').classList.add('hidden');
-        document.getElementById('content').classList.remove('hidden');
+        const content = document.getElementById('content');
+        content.classList.remove('hidden');
+        
+        // Start falling flowers continuously
         createFallingFlowers();
-      }, 2500);
+      }, 2000);
     }
 
+    /* ----- ANIMATIONS ----- */
     function createExplosion() {
       const container = document.getElementById('explosionContainer');
       const centerX = window.innerWidth / 2;
       const centerY = window.innerHeight / 2;
-      const isMobile = window.innerWidth < 481;
-      const flowerCount = isMobile ? 60 : 100;
+      const isMobile = window.innerWidth < 500;
+      const flowerCount = isMobile ? 50 : 80;
       
       for (let i = 0; i < flowerCount; i++) {
-        const angle = (Math.PI * 2 * i) / flowerCount + (Math.random() - 0.5) * 0.5;
-        const velocity = 200 + Math.random() * 400;
-        const size = isMobile ? (25 + Math.random() * 20) : (30 + Math.random() * 30);
+        const angle = Math.random() * Math.PI * 2;
+        const velocity = 150 + Math.random() * (isMobile ? 200 : 350);
+        const size = isMobile ? (20 + Math.random() * 20) : (30 + Math.random() * 30);
         
         const div = document.createElement('div');
         div.className = 'explosion-flower';
         div.innerHTML = getFlower(size);
-        div.style.left = centerX - size/2 + 'px';
-        div.style.top = centerY - size/2 + 'px';
+        div.style.left = (centerX - size/2) + 'px';
+        div.style.top = (centerY - size/2) + 'px';
         div.style.opacity = '0';
+        div.style.transform = 'scale(0)';
         
         container.appendChild(div);
         
-        // Animate using JavaScript for better compatibility
-        const delay = Math.random() * 300;
+        const duration = 1.5 + Math.random();
         const targetX = Math.cos(angle) * velocity;
         const targetY = Math.sin(angle) * velocity;
         const rotation = Math.random() * 720 - 360;
         
-        setTimeout(() => {
-          div.style.opacity = '1';
-          div.style.transition = 'transform 1.8s ease-out, opacity 1.8s ease-out';
-          div.style.transform = `translate(${targetX}px, ${targetY}px) rotate(${rotation}deg) scale(0.3)`;
-          div.style.opacity = '0';
-        }, delay);
+        div.offsetHeight; // Force reflow
         
-        // Remove after animation
-        setTimeout(() => {
-          div.remove();
-        }, 2500);
+        div.style.transition = `all ${duration}s cubic-bezier(0.1, 0.8, 0.2, 1)`;
+        div.style.opacity = '1';
+        div.style.transform = `translate(${targetX}px, ${targetY}px) rotate(${rotation}deg) scale(1)`;
+        
+        setTimeout(() => { div.style.opacity = '0'; }, duration * 0.7 * 1000);
+        setTimeout(() => { div.remove(); }, duration * 1000 + 100);
       }
     }
 
     function createFallingFlowers() {
       const container = document.getElementById('fallingContainer');
-      const isMobile = window.innerWidth < 481;
-      const flowerCount = isMobile ? 20 : 30;
+      const isMobile = window.innerWidth < 500;
       
-      for (let i = 0; i < flowerCount; i++) {
-        const size = isMobile ? (25 + Math.random() * 15) : (30 + Math.random() * 20);
+      setInterval(() => {
+        const size = isMobile ? (20 + Math.random() * 15) : (25 + Math.random() * 25);
         const div = document.createElement('div');
         div.className = 'falling-flower';
         div.innerHTML = getFlower(size);
         div.style.left = Math.random() * 100 + '%';
         
-        const duration = 5 + Math.random() * 4;
-        const delay = Math.random() * 5;
+        const duration = 6 + Math.random() * 4;
+        div.style.animation = `falling ${duration}s linear forwards`;
         
-        div.style.animation = `falling ${duration}s linear ${delay}s infinite`;
         container.appendChild(div);
-      }
+        setTimeout(() => { div.remove(); }, duration * 1000);
+      }, 300);
     }
 
-    // Create background flowers for page 1
-    const isMobile = window.innerWidth < 481;
-    const bgFlowerCount = isMobile ? 8 : 12;
-    for (let i = 0; i < bgFlowerCount; i++) {
+    /* ----- BACKGROUND DECOR ----- */
+    const bgContainer = document.getElementById('bgFlowers1');
+    const bgCount = window.innerWidth < 500 ? 10 : 20;
+    
+    for(let i=0; i<bgCount; i++){
       const div = document.createElement('div');
       div.className = 'flower bg-flower';
-      div.innerHTML = getFlower(isMobile ? 30 : 40);
+      const size = 30 + Math.random() * 30;
+      div.innerHTML = getFlower(size);
       div.style.left = Math.random() * 100 + '%';
       div.style.top = Math.random() * 100 + '%';
-      div.style.animationDelay = Math.random() * 3 + 's';
-      document.getElementById('bgFlowers1').appendChild(div);
+      div.style.animationDelay = Math.random() * 4 + 's';
+      bgContainer.appendChild(div);
     }
   </script>
 </body>

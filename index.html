@@ -41,15 +41,17 @@
     .flower { position: absolute; pointer-events: none; }
     .bg-flower { opacity: 0.5; animation: bounce 3s ease-in-out infinite; }
     
-    .explosion-flower { position: absolute; left: 50%; top: 50%; pointer-events: none; opacity: 0; }
-    .falling-flower { position: absolute; pointer-events: none; animation: fall linear infinite; }
+    #explosionContainer { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 100; }
+    .explosion-flower { position: absolute; pointer-events: none; will-change: transform, opacity; }
+    
+    #fallingContainer { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 5; overflow: hidden; }
+    .falling-flower { position: absolute; pointer-events: none; top: -60px; }
     
     .heart-icon { font-size: 2.5rem; display: flex; justify-content: center; align-items: center; gap: 8px; margin-bottom: 12px; }
     .heart-icon svg { width: 40px; height: 40px; }
     .pulse { animation: pulse 1s ease-in-out infinite; }
-    .big-heart { font-size: 5rem; animation: pulse 0.5s ease-in-out infinite; }
+    .big-heart { font-size: 5rem; animation: pulse 0.5s ease-in-out infinite; position: relative; z-index: 10; }
     
-    /* Desktop styles */
     @media (min-width: 481px) {
       .card { padding: 40px; }
       .card2 { padding: 24px; }
@@ -64,7 +66,6 @@
       .heart-icon { font-size: 3rem; }
     }
     
-    /* Small mobile */
     @media (max-width: 380px) {
       .card { padding: 20px 16px; border-radius: 20px; }
       h1 { font-size: 1.6rem; }
@@ -81,7 +82,10 @@
     @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
     @keyframes fadeIn { 0% { opacity: 0; transform: scale(0.8); } 100% { opacity: 1; transform: scale(1); } }
     @keyframes glow { 0%, 100% { box-shadow: 0 0 20px rgba(194,24,91,0.5); } 50% { box-shadow: 0 0 40px rgba(194,24,91,0.8); } }
-    @keyframes fall { 0% { transform: translateY(-100px) rotate(0deg); opacity: 1; } 100% { transform: translateY(100vh) rotate(360deg); opacity: 0.8; } }
+    @keyframes falling { 
+      0% { transform: translateY(0) rotate(0deg); opacity: 1; } 
+      100% { transform: translateY(calc(100vh + 100px)) rotate(360deg); opacity: 0.7; } 
+    }
   </style>
 </head>
 <body>
@@ -144,7 +148,7 @@
       return svg.replace(/SIZE/g, size);
     }
 
-    // Runaway No button - works on both desktop and mobile
+    // Runaway No button
     const noBtn = document.getElementById('noBtn');
     let lastMove = 0;
     
@@ -175,42 +179,57 @@
     function showPage2() {
       document.getElementById('page1').classList.add('hidden');
       document.getElementById('page2').classList.remove('hidden');
-      createExplosion();
+      
+      // Start explosion after a tiny delay to ensure page is visible
+      setTimeout(createExplosion, 100);
+      
+      // Show content after explosion
       setTimeout(() => {
         document.getElementById('loadingHeart').classList.add('hidden');
         document.getElementById('content').classList.remove('hidden');
         createFallingFlowers();
-      }, 2000);
+      }, 2500);
     }
 
     function createExplosion() {
       const container = document.getElementById('explosionContainer');
+      const centerX = window.innerWidth / 2;
+      const centerY = window.innerHeight / 2;
       const isMobile = window.innerWidth < 481;
-      const flowerCount = isMobile ? 50 : 80;
-      const velocityMultiplier = isMobile ? 0.7 : 1;
+      const flowerCount = isMobile ? 60 : 100;
       
       for (let i = 0; i < flowerCount; i++) {
-        const angle = (Math.PI * 2 * i) / flowerCount + Math.random() * 0.5;
-        const velocity = (120 + Math.random() * 280) * velocityMultiplier;
-        const size = isMobile ? (25 + Math.random() * 25) : (30 + Math.random() * 35);
+        const angle = (Math.PI * 2 * i) / flowerCount + (Math.random() - 0.5) * 0.5;
+        const velocity = 200 + Math.random() * 400;
+        const size = isMobile ? (25 + Math.random() * 20) : (30 + Math.random() * 30);
+        
         const div = document.createElement('div');
         div.className = 'explosion-flower';
         div.innerHTML = getFlower(size);
-        div.style.marginLeft = -size/2 + 'px';
-        div.style.marginTop = -size/2 + 'px';
-        const tx = Math.cos(angle) * velocity;
-        const ty = Math.sin(angle) * velocity;
-        const rot = Math.random() * 720;
-        const delay = Math.random() * 0.3;
-        div.style.animation = `explode 2s ease-out ${delay}s forwards`;
-        div.style.setProperty('--tx', tx + 'px');
-        div.style.setProperty('--ty', ty + 'px');
-        div.style.setProperty('--rot', rot + 'deg');
+        div.style.left = centerX - size/2 + 'px';
+        div.style.top = centerY - size/2 + 'px';
+        div.style.opacity = '0';
+        
         container.appendChild(div);
+        
+        // Animate using JavaScript for better compatibility
+        const delay = Math.random() * 300;
+        const targetX = Math.cos(angle) * velocity;
+        const targetY = Math.sin(angle) * velocity;
+        const rotation = Math.random() * 720 - 360;
+        
+        setTimeout(() => {
+          div.style.opacity = '1';
+          div.style.transition = 'transform 1.8s ease-out, opacity 1.8s ease-out';
+          div.style.transform = `translate(${targetX}px, ${targetY}px) rotate(${rotation}deg) scale(0.3)`;
+          div.style.opacity = '0';
+        }, delay);
+        
+        // Remove after animation
+        setTimeout(() => {
+          div.remove();
+        }, 2500);
       }
-      const style = document.createElement('style');
-      style.textContent = `@keyframes explode { 0% { transform: translate(0,0) rotate(0) scale(0); opacity: 0; } 10% { opacity: 1; transform: scale(1); } 100% { transform: translate(var(--tx), var(--ty)) rotate(var(--rot)) scale(0.5); opacity: 0; } }`;
-      document.head.appendChild(style);
     }
 
     function createFallingFlowers() {
@@ -224,8 +243,11 @@
         div.className = 'falling-flower';
         div.innerHTML = getFlower(size);
         div.style.left = Math.random() * 100 + '%';
-        div.style.animationDuration = (5 + Math.random() * 4) + 's';
-        div.style.animationDelay = Math.random() * 5 + 's';
+        
+        const duration = 5 + Math.random() * 4;
+        const delay = Math.random() * 5;
+        
+        div.style.animation = `falling ${duration}s linear ${delay}s infinite`;
         container.appendChild(div);
       }
     }

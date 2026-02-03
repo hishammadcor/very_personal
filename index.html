@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>For Anan 💕</title>
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: Georgia, serif; overflow-x: hidden; }
+    
+    .page { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; position: relative; overflow: hidden; background: linear-gradient(135deg, #fce4ec 0%, #f8bbd9 25%, #e91e63 50%, #c2185b 75%, #880e4f 100%); }
+    .hidden { display: none; }
+    
+    .card { background: linear-gradient(145deg, rgba(255,255,255,0.95), rgba(252,228,236,0.95)); border: 3px solid #c2185b; border-radius: 24px; padding: 40px; max-width: 500px; text-align: center; position: relative; z-index: 10; box-shadow: 0 20px 60px rgba(0,0,0,0.2); }
+    .card2 { max-width: 700px; padding: 24px; animation: fadeIn 1s ease-out, glow 2s ease-in-out infinite; }
+    
+    h1 { font-size: 2.5rem; color: #880e4f; margin-bottom: 16px; }
+    h2 { font-size: 1.75rem; color: #880e4f; margin-bottom: 16px; }
+    .divider { width: 120px; height: 4px; background: linear-gradient(90deg, #f48fb1, #c2185b, #f48fb1); margin: 16px auto; border-radius: 4px; }
+    .subtitle { font-size: 1.25rem; color: #ad1457; margin-bottom: 8px; }
+    .date { font-size: 2.5rem; font-weight: bold; color: #880e4f; margin-bottom: 24px; }
+    .question { font-size: 1.1rem; color: #c2185b; font-style: italic; margin-bottom: 32px; }
+    .hint { font-size: 0.9rem; color: #c2185b; font-style: italic; margin-top: 24px; }
+    
+    .buttons { display: flex; justify-content: center; gap: 32px; align-items: center; min-height: 80px; position: relative; }
+    .btn-yes { padding: 12px 32px; background: linear-gradient(135deg, #e91e63, #c2185b, #880e4f); color: white; font-size: 1.25rem; font-weight: 600; border: none; border-radius: 50px; cursor: pointer; box-shadow: 0 4px 15px rgba(194,24,91,0.4); transition: transform 0.3s, box-shadow 0.3s; }
+    .btn-yes:hover { transform: scale(1.1); box-shadow: 0 6px 25px rgba(194,24,91,0.5); }
+    .btn-no { padding: 12px 32px; background: #d7ccc8; color: #888; font-size: 1.25rem; font-weight: 600; border: none; border-radius: 50px; cursor: not-allowed; transition: transform 0.2s; position: relative; }
+    
+    .photos { display: flex; justify-content: center; gap: 16px; margin-bottom: 20px; flex-wrap: wrap; }
+    .photo { width: 176px; height: 224px; border: 4px solid #c2185b; border-radius: 16px; overflow: hidden; box-shadow: 0 8px 25px rgba(0,0,0,0.15); }
+    .photo img { width: 100%; height: 100%; object-fit: cover; }
+    
+    .arabic-box { background: linear-gradient(135deg, rgba(136,14,79,0.1), rgba(194,24,91,0.1)); border: 2px solid #f48fb1; border-radius: 16px; padding: 20px; margin-bottom: 16px; }
+    .arabic-text { font-family: 'Amiri', serif; font-size: 1.25rem; direction: rtl; color: #880e4f; line-height: 2.2; }
+    .more-text { font-family: 'Amiri', serif; color: #c2185b; margin-top: 12px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+    
+    .footer { color: #880e4f; display: flex; align-items: center; justify-content: center; gap: 8px; }
+    
+    .flower { position: absolute; pointer-events: none; }
+    .bg-flower { opacity: 0.6; animation: bounce 3s ease-in-out infinite; }
+    
+    .explosion-flower { position: absolute; left: 50%; top: 50%; pointer-events: none; opacity: 0; }
+    .falling-flower { position: absolute; pointer-events: none; animation: fall linear infinite; }
+    
+    .heart-icon { font-size: 3rem; display: flex; justify-content: center; gap: 8px; margin-bottom: 16px; }
+    .pulse { animation: pulse 1s ease-in-out infinite; }
+    .big-heart { font-size: 6rem; animation: pulse 0.5s ease-in-out infinite; }
+    
+    @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+    @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
+    @keyframes fadeIn { 0% { opacity: 0; transform: scale(0.8); } 100% { opacity: 1; transform: scale(1); } }
+    @keyframes glow { 0%, 100% { box-shadow: 0 0 20px rgba(194,24,91,0.5); } 50% { box-shadow: 0 0 40px rgba(194,24,91,0.8); } }
+    @keyframes fall { 0% { transform: translateY(-100px) rotate(0deg); opacity: 1; } 100% { transform: translateY(100vh) rotate(360deg); opacity: 0.8; } }
+  </style>
+</head>
+<body>
+  <!-- PAGE 1 -->
+  <div id="page1" class="page">
+    <div id="bgFlowers1"></div>
+    <div class="card">
+      <div class="heart-icon">
+        <svg width="50" height="50" viewBox="0 0 100 100"><ellipse cx="50" cy="45" rx="20" ry="18" fill="#8B0000"/><ellipse cx="42" cy="42" rx="15" ry="14" fill="#B22222"/><ellipse cx="58" cy="42" rx="15" ry="14" fill="#B22222"/><ellipse cx="50" cy="35" rx="12" ry="12" fill="#DC143C"/><ellipse cx="45" cy="50" rx="14" ry="12" fill="#8B0000"/><ellipse cx="55" cy="50" rx="14" ry="12" fill="#8B0000"/><ellipse cx="50" cy="40" rx="8" ry="10" fill="#FF6B6B"/><path d="M50 58 Q50 75 50 90" stroke="#228B22" stroke-width="3" fill="none"/><ellipse cx="38" cy="70" rx="6" ry="4" fill="#2E8B2E"/></svg>
+        <span style="font-size:3rem">💕</span>
+        <svg width="50" height="50" viewBox="0 0 100 100"><ellipse cx="50" cy="45" rx="20" ry="18" fill="#DB7093"/><ellipse cx="42" cy="42" rx="15" ry="14" fill="#FF69B4"/><ellipse cx="58" cy="42" rx="15" ry="14" fill="#FF69B4"/><ellipse cx="50" cy="35" rx="12" ry="12" fill="#FFB6C1"/><ellipse cx="45" cy="50" rx="14" ry="12" fill="#DB7093"/><ellipse cx="55" cy="50" rx="14" ry="12" fill="#DB7093"/><ellipse cx="50" cy="40" rx="8" ry="10" fill="#FFC0CB"/><path d="M50 58 Q50 75 50 90" stroke="#228B22" stroke-width="3" fill="none"/><ellipse cx="62" cy="70" rx="6" ry="4" fill="#2E8B2E"/></svg>
+      </div>
+      <h1>Hello Hello Anan</h1>
+      <div class="divider"></div>
+      <p class="subtitle">I did not forget our special day</p>
+      <p class="date">✨ 13.02 ✨</p>
+      <p class="question">Would you like to continue forward in this relationship?</p>
+      <div class="buttons">
+        <button class="btn-yes" onclick="showPage2()">Yes 💖</button>
+        <button class="btn-no" id="noBtn" onmouseenter="moveNoBtn()" ontouchstart="moveNoBtn()">No 😢</button>
+      </div>
+      <p class="hint">(There's only one right answer 😉)</p>
+    </div>
+  </div>
+
+  <!-- PAGE 2 -->
+  <div id="page2" class="page hidden">
+    <div id="explosionContainer"></div>
+    <div id="fallingContainer"></div>
+    <div id="loadingHeart" class="big-heart">💕</div>
+    <div id="content" class="card card2 hidden">
+      <div class="heart-icon pulse">
+        <svg width="45" height="45" viewBox="0 0 100 100"><ellipse cx="50" cy="45" rx="20" ry="18" fill="#8B0000"/><ellipse cx="42" cy="42" rx="15" ry="14" fill="#B22222"/><ellipse cx="58" cy="42" rx="15" ry="14" fill="#B22222"/><ellipse cx="50" cy="35" rx="12" ry="12" fill="#DC143C"/><ellipse cx="45" cy="50" rx="14" ry="12" fill="#8B0000"/><ellipse cx="55" cy="50" rx="14" ry="12" fill="#8B0000"/><ellipse cx="50" cy="40" rx="8" ry="10" fill="#FF6B6B"/></svg>
+        <span style="font-size:2.5rem">💍</span>
+        <svg width="45" height="45" viewBox="0 0 100 100"><ellipse cx="50" cy="45" rx="20" ry="18" fill="#DB7093"/><ellipse cx="42" cy="42" rx="15" ry="14" fill="#FF69B4"/><ellipse cx="58" cy="42" rx="15" ry="14" fill="#FF69B4"/><ellipse cx="50" cy="35" rx="12" ry="12" fill="#FFB6C1"/><ellipse cx="45" cy="50" rx="14" ry="12" fill="#DB7093"/><ellipse cx="55" cy="50" rx="14" ry="12" fill="#DB7093"/><ellipse cx="50" cy="40" rx="8" ry="10" fill="#FFC0CB"/></svg>
+      </div>
+      <h2>Hesham & Anan</h2>
+      <div class="photos">
+        <div class="photo"><img src="https://lh3.googleusercontent.com/pw/AP1GczN0rkcEZwzWhNroykbiifVqSKsqcFAkBkhBOmqq6Dswzb7IQD1jEAib0rtvsuHN_tALt71LV7yEGJNos5PQaZ3531UGf0oC5oGsfIcSVMtU-iNIEw=w800" alt="Our rings"></div>
+        <div class="photo"><img src="https://lh3.googleusercontent.com/pw/AP1GczP9-o_nK7wbURoLw-V7caepd7l2uWHW1B4QBA9Y-HQ5MGtcn6KwE_2WMkDhZLAbv2oxXt85Kr_1es54DKUmYgWy_Pdm74_wwJzXmLD7nQHmPPS_AA=w800" alt="Our cake"></div>
+      </div>
+      <div class="arabic-box">
+        <p class="arabic-text">لقد مر قرابة الشهر على هذه المناسبة. فاللهم اتممها بالخير وارزقنا الصلاح والفلاح في الدنيا والآخرة. اللهم بارك فيها وفي واحفظنا بحفظك وعينك التي لا تنام.</p>
+        <div class="more-text">🌷 More to come after signatures… 🌷</div>
+      </div>
+      <div class="footer"><span>💕</span><span>13.02</span><span>💕</span></div>
+    </div>
+  </div>
+
+  <script>
+    const flowerSVGs = [
+      `<svg width="SIZE" height="SIZE" viewBox="0 0 100 100"><ellipse cx="50" cy="45" rx="20" ry="18" fill="#8B0000"/><ellipse cx="42" cy="42" rx="15" ry="14" fill="#B22222"/><ellipse cx="58" cy="42" rx="15" ry="14" fill="#B22222"/><ellipse cx="50" cy="35" rx="12" ry="12" fill="#DC143C"/><ellipse cx="45" cy="50" rx="14" ry="12" fill="#8B0000"/><ellipse cx="55" cy="50" rx="14" ry="12" fill="#8B0000"/><ellipse cx="50" cy="40" rx="8" ry="10" fill="#FF6B6B"/><path d="M50 58 Q50 75 50 90" stroke="#228B22" stroke-width="3" fill="none"/><ellipse cx="38" cy="70" rx="6" ry="4" fill="#2E8B2E"/></svg>`,
+      `<svg width="SIZE" height="SIZE" viewBox="0 0 100 100"><ellipse cx="50" cy="45" rx="20" ry="18" fill="#DB7093"/><ellipse cx="42" cy="42" rx="15" ry="14" fill="#FF69B4"/><ellipse cx="58" cy="42" rx="15" ry="14" fill="#FF69B4"/><ellipse cx="50" cy="35" rx="12" ry="12" fill="#FFB6C1"/><ellipse cx="45" cy="50" rx="14" ry="12" fill="#DB7093"/><ellipse cx="55" cy="50" rx="14" ry="12" fill="#DB7093"/><ellipse cx="50" cy="40" rx="8" ry="10" fill="#FFC0CB"/><path d="M50 58 Q50 75 50 90" stroke="#228B22" stroke-width="3" fill="none"/><ellipse cx="62" cy="70" rx="6" ry="4" fill="#2E8B2E"/></svg>`,
+      `<svg width="SIZE" height="SIZE" viewBox="0 0 100 100"><path d="M35 50 Q30 30 40 20 Q50 10 50 25" fill="#DC143C"/><path d="M65 50 Q70 30 60 20 Q50 10 50 25" fill="#B22222"/><path d="M40 55 Q45 25 50 20 Q55 25 60 55" fill="#FF4444"/><path d="M50 50 Q50 70 50 90" stroke="#228B22" stroke-width="4" fill="none"/><ellipse cx="32" cy="66" rx="8" ry="4" fill="#2E8B2E"/></svg>`,
+      `<svg width="SIZE" height="SIZE" viewBox="0 0 100 100"><path d="M35 50 Q30 30 40 20 Q50 10 50 25" fill="#FF69B4"/><path d="M65 50 Q70 30 60 20 Q50 10 50 25" fill="#DB7093"/><path d="M40 55 Q45 25 50 20 Q55 25 60 55" fill="#FFB6C1"/><path d="M50 50 Q50 70 50 90" stroke="#228B22" stroke-width="4" fill="none"/><ellipse cx="32" cy="66" rx="8" ry="4" fill="#2E8B2E"/></svg>`
+    ];
+
+    function getFlower(size) {
+      const svg = flowerSVGs[Math.floor(Math.random() * flowerSVGs.length)];
+      return svg.replace(/SIZE/g, size);
+    }
+
+    function moveNoBtn() {
+      const btn = document.getElementById('noBtn');
+      const x = (Math.random() - 0.5) * 300;
+      const y = (Math.random() - 0.5) * 200;
+      btn.style.transform = `translate(${x}px, ${y}px)`;
+    }
+
+    function showPage2() {
+      document.getElementById('page1').classList.add('hidden');
+      document.getElementById('page2').classList.remove('hidden');
+      createExplosion();
+      setTimeout(() => {
+        document.getElementById('loadingHeart').classList.add('hidden');
+        document.getElementById('content').classList.remove('hidden');
+        createFallingFlowers();
+      }, 2000);
+    }
+
+    function createExplosion() {
+      const container = document.getElementById('explosionContainer');
+      for (let i = 0; i < 80; i++) {
+        const angle = (Math.PI * 2 * i) / 80 + Math.random() * 0.5;
+        const velocity = 150 + Math.random() * 350;
+        const size = 30 + Math.random() * 35;
+        const div = document.createElement('div');
+        div.className = 'explosion-flower';
+        div.innerHTML = getFlower(size);
+        div.style.marginLeft = -size/2 + 'px';
+        div.style.marginTop = -size/2 + 'px';
+        const tx = Math.cos(angle) * velocity;
+        const ty = Math.sin(angle) * velocity;
+        const rot = Math.random() * 720;
+        const delay = Math.random() * 0.3;
+        div.style.animation = `explode 2s ease-out ${delay}s forwards`;
+        div.style.setProperty('--tx', tx + 'px');
+        div.style.setProperty('--ty', ty + 'px');
+        div.style.setProperty('--rot', rot + 'deg');
+        container.appendChild(div);
+      }
+      const style = document.createElement('style');
+      style.textContent = `@keyframes explode { 0% { transform: translate(0,0) rotate(0) scale(0); opacity: 0; } 10% { opacity: 1; transform: scale(1); } 100% { transform: translate(var(--tx), var(--ty)) rotate(var(--rot)) scale(0.5); opacity: 0; } }`;
+      document.head.appendChild(style);
+    }
+
+    function createFallingFlowers() {
+      const container = document.getElementById('fallingContainer');
+      for (let i = 0; i < 30; i++) {
+        const size = 30 + Math.random() * 20;
+        const div = document.createElement('div');
+        div.className = 'falling-flower';
+        div.innerHTML = getFlower(size);
+        div.style.left = Math.random() * 100 + '%';
+        div.style.animationDuration = (5 + Math.random() * 4) + 's';
+        div.style.animationDelay = Math.random() * 5 + 's';
+        container.appendChild(div);
+      }
+    }
+
+    // Create background flowers for page 1
+    for (let i = 0; i < 12; i++) {
+      const div = document.createElement('div');
+      div.className = 'flower bg-flower';
+      div.innerHTML = getFlower(40);
+      div.style.left = Math.random() * 100 + '%';
+      div.style.top = Math.random() * 100 + '%';
+      div.style.animationDelay = Math.random() * 3 + 's';
+      document.getElementById('bgFlowers1').appendChild(div);
+    }
+  </script>
+</body>
+</html>

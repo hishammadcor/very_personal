@@ -270,6 +270,12 @@
     </div>
   </div>
 
+  <!-- Hidden SoundCloud player for Fairuz -->
+  <iframe id="sc-player" style="display:none" allow="autoplay"
+    src="https://w.soundcloud.com/player/?url=https%3A%2F%2Fsoundcloud.com%2Ffairouz-music%2Fkan-endena-tahoun-sahar-el&auto_play=false&show_artwork=false">
+  </iframe>
+  <script src="https://w.soundcloud.com/player/api.js"></script>
+
   <div id="page2" class="page hidden">
     <div id="explosionContainer"></div>
     <div id="fallingContainer"></div>
@@ -354,27 +360,41 @@
     // Fallback click
     noBtn.addEventListener('click', moveNoBtn);
 
-    /* ----- AUDIO ----- */
-    // IMPORTANT: Replace this URL with a direct link to your audio file.
-    // See instructions in the comment below.
-    let audioSrc = 'https://audio.com/layan-aljareri/audio/kan-andna-tahon-shr-allyaly-fyroz-kan-endena-tahoun-sahar-el-laialy-fairuz'; // <-- Put your audio file URL here (MP3/OGG/WAV)
-    let songAudio = null;
-    const SONG_START = 79;  // 1:19 in seconds
-    const SONG_END   = 120; // 2:00 in seconds
+    /* ----- AUDIO (SoundCloud Widget API) ----- */
+    const SONG_START_MS = 79000;  // 1:19
+    const SONG_END_MS   = 120000; // 2:00
+    let scWidget = null;
+    let scReady = false;
+    let scPlayRequested = false;
+
+    try {
+      const iframeEl = document.getElementById('sc-player');
+      scWidget = SC.Widget(iframeEl);
+      scWidget.bind(SC.Widget.Events.READY, function() {
+        scReady = true;
+        scWidget.setVolume(80);
+        if (scPlayRequested) doPlay();
+      });
+      scWidget.bind(SC.Widget.Events.PLAY_PROGRESS, function(data) {
+        if (data.currentPosition >= SONG_END_MS) {
+          scWidget.pause();
+        }
+      });
+    } catch(e) { /* SoundCloud not critical */ }
+
+    function doPlay() {
+      try {
+        scWidget.play();
+        scWidget.seekTo(SONG_START_MS);
+      } catch(e) {}
+    }
 
     function playFairuz() {
-      if (!audioSrc) return;
-      try {
-        songAudio = new Audio(audioSrc);
-        songAudio.currentTime = SONG_START;
-        songAudio.play().catch(() => {});
-        // Stop at the end timestamp
-        songAudio.addEventListener('timeupdate', function() {
-          if (songAudio.currentTime >= SONG_END) {
-            songAudio.pause();
-          }
-        });
-      } catch(e) { /* audio not critical */ }
+      if (scReady) {
+        doPlay();
+      } else {
+        scPlayRequested = true;
+      }
     }
 
     /* ----- PAGE TRANSITIONS ----- */

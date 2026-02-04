@@ -183,6 +183,16 @@
     .glory-text.show { opacity: 1; transform: scale(1); }
     .glory-text.fade-out { opacity: 0; transform: scale(1.2); transition: opacity 1s ease-in, transform 1s ease-in; }
 
+    /* WAIT MESSAGE */
+    .wait-msg {
+      position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+      font-family: Georgia, serif; font-size: 0.95rem; font-style: italic;
+      color: rgba(255,255,255,0.9); text-shadow: 0 1px 4px rgba(0,0,0,0.3);
+      z-index: 160; opacity: 0; transition: opacity 0.6s ease;
+      text-align: center; white-space: nowrap;
+    }
+    .wait-msg.show { opacity: 1; }
+
     /* COUNTDOWN */
     .countdown-section {
       background: linear-gradient(135deg, rgba(136,14,79,0.08), rgba(194,24,91,0.08));
@@ -358,6 +368,7 @@
       <div class="glory-text" id="gloryText">She said yes 💍</div>
     </div>
     <div id="loadingHeart" class="big-heart">💕</div>
+    <div id="waitMsg1" class="wait-msg">Wait for it... 💕</div>
     
     <div id="content" class="card card2 hidden">
       <div class="heart-icon pulse">
@@ -379,7 +390,7 @@
       </div>
       
       <div class="countdown-section">
-        <div class="countdown-label">💕 Together since 23.01 💕</div>
+        <div class="countdown-label">💕 Engaged since 23.01.2026 💕</div>
         <div class="countdown-digits" id="countdown">
           <div class="countdown-unit"><span class="num" id="cd-days">0</span><span class="lbl">Days</span></div>
           <div class="countdown-unit"><span class="num" id="cd-hours">0</span><span class="lbl">Hours</span></div>
@@ -407,6 +418,9 @@
   <div id="goodgirlOverlay" class="goodgirl-overlay hidden">
     <div class="goodgirl-text">GOOOOOD GIRL 👏👏</div>
   </div>
+
+  <!-- WAIT MESSAGE (replay) -->
+  <div id="waitMsg2" class="wait-msg">Wait till the end... 💕</div>
 
   <!-- CLOSING MESSAGE -->
   <div id="closingOverlay" class="closing-overlay hidden">
@@ -519,8 +533,10 @@
         gg.classList.remove('show');
         setTimeout(function() { gg.classList.add('hidden'); }, 500);
 
-        // Replay the song, show closing message when it ends
+        // Show wait message and replay the song
+        document.getElementById('waitMsg2').classList.add('show');
         playFairuz(function() {
+          document.getElementById('waitMsg2').classList.remove('show');
           showClosing();
         });
       }, 2500);
@@ -543,12 +559,14 @@
       // 1. Start Explosion + play song (show popup when it ends)
       setTimeout(createExplosion, 50);
       playFairuz(function() {
+        document.getElementById('waitMsg1').classList.remove('show');
         showPopup();
       });
 
-      // 2. Show "She said yes" glory text
+      // Show wait message and "She said yes" glory text
       setTimeout(() => {
         document.getElementById('gloryText').classList.add('show');
+        document.getElementById('waitMsg1').classList.add('show');
       }, 300);
 
       // 3. Fade out glory text

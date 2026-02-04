@@ -203,6 +203,87 @@
     }
     .countdown-unit .num { font-size: 1.5rem; font-weight: bold; display: block; }
     .countdown-unit .lbl { font-size: 0.65rem; text-transform: uppercase; opacity: 0.9; display: block; }
+
+    /* POPUP MODAL */
+    .modal-overlay {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center;
+      z-index: 200; opacity: 0; transition: opacity 0.4s ease;
+    }
+    .modal-overlay.show { opacity: 1; }
+    .modal-box {
+      background: linear-gradient(145deg, rgba(255,255,255,0.97), rgba(252,228,236,0.97));
+      border: 3px solid #c2185b; border-radius: 24px; padding: 30px 24px;
+      max-width: 400px; width: 90%; text-align: center;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      animation: fadeIn 0.4s ease-out;
+    }
+    .modal-box p {
+      font-size: 1.15rem; color: #880e4f; margin-bottom: 24px; line-height: 1.5;
+      font-style: italic;
+    }
+    .modal-buttons {
+      display: flex; justify-content: center; gap: 16px; align-items: center;
+      min-height: 55px; position: relative;
+    }
+    .modal-btn {
+      padding: 12px 28px; font-size: 1.05rem; font-weight: 600;
+      border: none; border-radius: 50px; cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+    }
+    .modal-btn-okay {
+      background: linear-gradient(135deg, #e91e63, #c2185b, #880e4f);
+      color: white; transition: transform 0.15s ease-out;
+    }
+    .modal-btn-okay:active { transform: scale(0.95); }
+    .modal-btn-dismiss {
+      background: #d7ccc8; color: #666;
+    }
+    .modal-btn-dismiss:active { transform: scale(0.95); }
+
+    /* GOOD GIRL OVERLAY */
+    .goodgirl-overlay {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      display: flex; align-items: center; justify-content: center;
+      z-index: 250; background: rgba(136,14,79,0.85);
+      opacity: 0; transition: opacity 0.5s ease;
+    }
+    .goodgirl-overlay.show { opacity: 1; }
+    .goodgirl-text {
+      font-family: Georgia, 'Times New Roman', serif;
+      font-size: 3rem; font-weight: bold; color: #fff;
+      text-shadow: 0 0 30px rgba(255,255,255,0.5), 0 4px 8px rgba(0,0,0,0.3);
+      text-align: center; line-height: 1.4; padding: 0 20px;
+      transform: scale(0.5); transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .goodgirl-overlay.show .goodgirl-text { transform: scale(1); }
+
+    /* CLOSING MESSAGE */
+    .closing-overlay {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      display: flex; align-items: center; justify-content: center;
+      z-index: 250; background: linear-gradient(135deg, #fce4ec 0%, #f8bbd9 50%, #e91e63 100%);
+      opacity: 0; transition: opacity 0.8s ease;
+    }
+    .closing-overlay.show { opacity: 1; }
+    .closing-text {
+      font-family: 'Aref Ruqaa', Georgia, serif;
+      font-size: 2rem; color: #880e4f; text-align: center;
+      line-height: 1.6; padding: 0 30px;
+      opacity: 0; transform: translateY(20px);
+      transition: opacity 1s ease, transform 1s ease;
+    }
+    .closing-overlay.show .closing-text { opacity: 1; transform: translateY(0); }
+
+    @media (min-width: 500px) {
+      .goodgirl-text { font-size: 4.5rem; }
+      .closing-text { font-size: 2.5rem; }
+    }
+    @media (max-width: 360px) {
+      .goodgirl-text { font-size: 2.2rem; }
+      .closing-text { font-size: 1.5rem; }
+      .modal-btn { padding: 10px 20px; font-size: 0.95rem; }
+    }
     
     /* BACKGROUND ELEMENTS */
     .flower { position: absolute; pointer-events: none; z-index: 0; }
@@ -311,6 +392,27 @@
     </div>
   </div>
 
+  <!-- POPUP MODAL -->
+  <div id="popupModal" class="modal-overlay hidden">
+    <div class="modal-box">
+      <p>Want to know what will happen if you said no? 🤔</p>
+      <div class="modal-buttons">
+        <button class="modal-btn modal-btn-okay" id="okayBtn">Okay</button>
+        <button class="modal-btn modal-btn-dismiss" id="dismissBtn">Does not matter</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- GOOOOOD GIRL OVERLAY -->
+  <div id="goodgirlOverlay" class="goodgirl-overlay hidden">
+    <div class="goodgirl-text">GOOOOOD GIRL 👏👏</div>
+  </div>
+
+  <!-- CLOSING MESSAGE -->
+  <div id="closingOverlay" class="closing-overlay hidden">
+    <div class="closing-text">More to come ISA ... 😊</div>
+  </div>
+
   <script>
     /* ----- SVG DATA ----- */
     const flowerSVGs = [
@@ -358,16 +460,76 @@
     var songAudio = new Audio('fayruz.mp3');
     songAudio.preload = 'auto';
     var SONG_START = 79;   // 1:19
-    var SONG_END   = 120;  // 2:00
+    var SONG_END   = 118;  // 1:58
+    var playCount = 0;
+    var onSongEnd = null;
 
-    function playFairuz() {
+    function playFairuz(callback) {
+      onSongEnd = callback || null;
       songAudio.currentTime = SONG_START;
       songAudio.play().catch(function(){});
-      songAudio.addEventListener('timeupdate', function() {
-        if (songAudio.currentTime >= SONG_END) {
-          songAudio.pause();
-        }
-      });
+    }
+
+    songAudio.addEventListener('timeupdate', function() {
+      if (songAudio.currentTime >= SONG_END) {
+        songAudio.pause();
+        playCount++;
+        if (onSongEnd) { var cb = onSongEnd; onSongEnd = null; cb(); }
+      }
+    });
+
+    /* ----- POPUP MODAL ----- */
+    var okayBtn = document.getElementById('okayBtn');
+    var dismissBtn = document.getElementById('dismissBtn');
+    var popupModal = document.getElementById('popupModal');
+
+    function showPopup() {
+      popupModal.classList.remove('hidden');
+      setTimeout(function() { popupModal.classList.add('show'); }, 30);
+    }
+
+    // Okay button — looks totally normal, only dodges on mousedown/touchstart
+    // Uses small movements so it feels like a near-miss, not an obvious trick
+    var okayDodgeCount = 0;
+    function dodgeOkay(e) {
+      if (e) e.preventDefault();
+      okayDodgeCount++;
+      // Subtle at first, gets more obvious after repeated attempts
+      var range = Math.min(40 + okayDodgeCount * 15, 130);
+      var rx = (Math.random() - 0.5) * range * 2;
+      var ry = (Math.random() - 0.5) * range * 2;
+      okayBtn.style.transform = 'translate(' + rx + 'px, ' + ry + 'px)';
+    }
+    okayBtn.addEventListener('mousedown', dodgeOkay);
+    okayBtn.addEventListener('touchstart', dodgeOkay, { passive: false });
+
+    // "Does not matter" → GOOOOOD GIRL → replay
+    dismissBtn.addEventListener('click', function() {
+      // Hide modal
+      popupModal.classList.remove('show');
+      setTimeout(function() { popupModal.classList.add('hidden'); }, 400);
+
+      // Show GOOOOOD GIRL
+      var gg = document.getElementById('goodgirlOverlay');
+      gg.classList.remove('hidden');
+      setTimeout(function() { gg.classList.add('show'); }, 50);
+
+      // After 2.5s, hide GOOOOOD GIRL and replay song
+      setTimeout(function() {
+        gg.classList.remove('show');
+        setTimeout(function() { gg.classList.add('hidden'); }, 500);
+
+        // Replay the song, show closing message when it ends
+        playFairuz(function() {
+          showClosing();
+        });
+      }, 2500);
+    });
+
+    function showClosing() {
+      var cl = document.getElementById('closingOverlay');
+      cl.classList.remove('hidden');
+      setTimeout(function() { cl.classList.add('show'); }, 50);
     }
 
     /* ----- PAGE TRANSITIONS ----- */
@@ -378,9 +540,11 @@
       p1.classList.add('hidden');
       p2.classList.remove('hidden');
 
-      // 1. Start Explosion + play song
+      // 1. Start Explosion + play song (show popup when it ends)
       setTimeout(createExplosion, 50);
-      playFairuz();
+      playFairuz(function() {
+        showPopup();
+      });
 
       // 2. Show "She said yes" glory text
       setTimeout(() => {

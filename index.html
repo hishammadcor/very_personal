@@ -185,13 +185,17 @@
 
     /* WAIT MESSAGE */
     .wait-msg {
-      position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
-      font-family: Georgia, serif; font-size: 0.95rem; font-style: italic;
-      color: rgba(255,255,255,0.9); text-shadow: 0 1px 4px rgba(0,0,0,0.3);
+      position: fixed; bottom: 20px; left: 0; width: 100%;
+      font-family: Georgia, serif; font-size: 1.2rem; font-weight: bold; font-style: italic;
+      color: #fff; text-shadow: 0 0 12px rgba(233,30,99,0.8), 0 2px 6px rgba(0,0,0,0.4);
       z-index: 160; opacity: 0; transition: opacity 0.6s ease;
-      text-align: center; white-space: nowrap;
+      text-align: center;
     }
-    .wait-msg.show { opacity: 1; }
+    .wait-msg.show { opacity: 1; animation: waitBeat 1s ease-in-out infinite; }
+    @keyframes waitBeat {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.15); }
+    }
 
     /* COUNTDOWN */
     .countdown-section {
@@ -288,11 +292,13 @@
     @media (min-width: 500px) {
       .goodgirl-text { font-size: 4.5rem; }
       .closing-text { font-size: 2.5rem; }
+      .wait-msg { font-size: 1.4rem; bottom: 30px; }
     }
     @media (max-width: 360px) {
       .goodgirl-text { font-size: 2.2rem; }
       .closing-text { font-size: 1.5rem; }
       .modal-btn { padding: 10px 20px; font-size: 0.95rem; }
+      .wait-msg { font-size: 1rem; }
     }
     
     /* BACKGROUND ELEMENTS */
@@ -475,21 +481,25 @@
     songAudio.preload = 'auto';
     var SONG_START = 79;   // 1:19
     var SONG_END   = 118;  // 1:58
-    var playCount = 0;
+    var currentEnd = SONG_END;
     var onSongEnd = null;
 
-    function playFairuz(callback) {
+    function playFairuz(callback, startAt, endAt) {
       onSongEnd = callback || null;
-      songAudio.currentTime = SONG_START;
+      currentEnd = (typeof endAt === 'number') ? endAt : SONG_END;
+      songAudio.currentTime = (typeof startAt === 'number') ? startAt : SONG_START;
       songAudio.play().catch(function(){});
     }
 
     songAudio.addEventListener('timeupdate', function() {
-      if (songAudio.currentTime >= SONG_END) {
+      if (currentEnd > 0 && songAudio.currentTime >= currentEnd) {
         songAudio.pause();
-        playCount++;
         if (onSongEnd) { var cb = onSongEnd; onSongEnd = null; cb(); }
       }
+    });
+
+    songAudio.addEventListener('ended', function() {
+      if (onSongEnd) { var cb = onSongEnd; onSongEnd = null; cb(); }
     });
 
     /* ----- POPUP MODAL ----- */
@@ -533,12 +543,12 @@
         gg.classList.remove('show');
         setTimeout(function() { gg.classList.add('hidden'); }, 500);
 
-        // Show wait message and replay the song
+        // Show wait message and replay from 2:13 till end
         document.getElementById('waitMsg2').classList.add('show');
         playFairuz(function() {
           document.getElementById('waitMsg2').classList.remove('show');
           showClosing();
-        });
+        }, 133, 0);
       }, 2500);
     });
 

@@ -183,19 +183,6 @@
     .glory-text.show { opacity: 1; transform: scale(1); }
     .glory-text.fade-out { opacity: 0; transform: scale(1.2); transition: opacity 1s ease-in, transform 1s ease-in; }
 
-    /* MUSIC PLAYER */
-    .music-section {
-      margin-bottom: 16px;
-    }
-    .music-label {
-      font-family: 'Aref Ruqaa', Georgia, serif;
-      font-size: 0.95rem; color: #ad1457; margin-bottom: 8px;
-    }
-    .sc-wrapper {
-      border-radius: 12px; overflow: hidden;
-      box-shadow: 0 2px 10px rgba(194,24,91,0.15);
-    }
-
     /* COUNTDOWN */
     .countdown-section {
       background: linear-gradient(135deg, rgba(136,14,79,0.08), rgba(194,24,91,0.08));
@@ -310,11 +297,6 @@
         <div class="more-text">🌷 More to come after signatures… 🌷</div>
       </div>
       
-      <div class="music-section" id="musicSection">
-        <div class="music-label">🎵 Our song 🎵</div>
-        <div class="sc-wrapper" id="scWrapper"></div>
-      </div>
-
       <div class="countdown-section">
         <div class="countdown-label">💕 Together since 23.01 💕</div>
         <div class="countdown-digits" id="countdown">
@@ -373,19 +355,19 @@
     noBtn.addEventListener('click', moveNoBtn);
 
     /* ----- AUDIO ----- */
+    var songAudio = new Audio('fayruz.mp3');
+    songAudio.preload = 'auto';
+    var SONG_START = 79;   // 1:19
+    var SONG_END   = 120;  // 2:00
+
     function playFairuz() {
-      // Inject visible SoundCloud player into the card so user can tap play on mobile
-      var wrapper = document.getElementById('scWrapper');
-      if (wrapper && !wrapper.hasChildNodes()) {
-        var iframe = document.createElement('iframe');
-        iframe.width = '100%';
-        iframe.height = '80';
-        iframe.scrolling = 'no';
-        iframe.frameBorder = 'no';
-        iframe.allow = 'autoplay';
-        iframe.src = 'https://w.soundcloud.com/player/?url=https%3A%2F%2Fsoundcloud.com%2Ffairouz-music%2Fkan-endena-tahoun-sahar-el&auto_play=true&hide_related=true&show_comments=false&show_user=false&show_reposts=false&show_teaser=false&show_artwork=true&start_track=0';
-        wrapper.appendChild(iframe);
-      }
+      songAudio.currentTime = SONG_START;
+      songAudio.play().catch(function(){});
+      songAudio.addEventListener('timeupdate', function() {
+        if (songAudio.currentTime >= SONG_END) {
+          songAudio.pause();
+        }
+      });
     }
 
     /* ----- PAGE TRANSITIONS ----- */

@@ -270,10 +270,7 @@
     </div>
   </div>
 
-  <!-- Hidden SoundCloud player for Fairuz -->
-  <iframe id="sc-player" style="display:none" allow="autoplay"
-    src="https://w.soundcloud.com/player/?url=https%3A%2F%2Fsoundcloud.com%2Ffairouz-music%2Fkan-endena-tahoun-sahar-el&auto_play=false&show_artwork=false">
-  </iframe>
+  <!-- SoundCloud Widget API (player iframe created on tap) -->
   <script src="https://w.soundcloud.com/player/api.js"></script>
 
   <div id="page2" class="page hidden">
@@ -363,38 +360,34 @@
     /* ----- AUDIO (SoundCloud Widget API) ----- */
     const SONG_START_MS = 79000;  // 1:19
     const SONG_END_MS   = 120000; // 2:00
-    let scWidget = null;
-    let scReady = false;
-    let scPlayRequested = false;
-
-    try {
-      const iframeEl = document.getElementById('sc-player');
-      scWidget = SC.Widget(iframeEl);
-      scWidget.bind(SC.Widget.Events.READY, function() {
-        scReady = true;
-        scWidget.setVolume(80);
-        if (scPlayRequested) doPlay();
-      });
-      scWidget.bind(SC.Widget.Events.PLAY_PROGRESS, function(data) {
-        if (data.currentPosition >= SONG_END_MS) {
-          scWidget.pause();
-        }
-      });
-    } catch(e) { /* SoundCloud not critical */ }
-
-    function doPlay() {
-      try {
-        scWidget.play();
-        scWidget.seekTo(SONG_START_MS);
-      } catch(e) {}
-    }
 
     function playFairuz() {
-      if (scReady) {
-        doPlay();
-      } else {
-        scPlayRequested = true;
-      }
+      try {
+        // Create iframe on user tap so mobile browsers allow autoplay
+        const iframe = document.createElement('iframe');
+        iframe.id = 'sc-player';
+        iframe.allow = 'autoplay';
+        iframe.style.cssText = 'position:fixed;bottom:0;left:0;width:1px;height:1px;opacity:0;pointer-events:none;';
+        iframe.src = 'https://w.soundcloud.com/player/?url=https%3A%2F%2Fsoundcloud.com%2Ffairouz-music%2Fkan-endena-tahoun-sahar-el&auto_play=true&show_artwork=false';
+        document.body.appendChild(iframe);
+
+        var widget = SC.Widget(iframe);
+        var hasSeeked = false;
+        widget.bind(SC.Widget.Events.READY, function() {
+          widget.setVolume(80);
+        });
+        widget.bind(SC.Widget.Events.PLAY, function() {
+          if (!hasSeeked) {
+            hasSeeked = true;
+            widget.seekTo(SONG_START_MS);
+          }
+        });
+        widget.bind(SC.Widget.Events.PLAY_PROGRESS, function(data) {
+          if (data.currentPosition >= SONG_END_MS) {
+            widget.pause();
+          }
+        });
+      } catch(e) { /* audio not critical */ }
     }
 
     /* ----- PAGE TRANSITIONS ----- */

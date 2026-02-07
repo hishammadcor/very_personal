@@ -526,7 +526,7 @@
     </div>
     <!-- Suspense music: add your audio file here -->
     <audio id="suspenseAudio" loop preload="auto">
-      <!-- <source src="suspense.mp3" type="audio/mpeg"> -->
+      <source src="suspense.mp3" type="audio/mpeg">
     </audio>
   </div>
 
@@ -615,13 +615,13 @@
   <div id="waitMsg2" class="wait-msg">Wait till the end... 💕</div>
 
   <!-- CLOSING MESSAGE -->
-<div id="closingOverlay" class="closing-overlay hidden">
+  <div id="closingOverlay" class="closing-overlay hidden">
     <div class="closing-content">
       <svg class="ha-svg" viewBox="0 0 220 80">
         <!-- H -->
         <path class="ha-path path-h" d="M 10 10 L 10 70 M 10 40 L 45 40 M 45 10 L 45 70"/>
-        <!-- & (ampersand) -->
-        <path class="ha-path path-amp" d="M 85 55 Q 70 65 60 55 Q 50 45 55 35 Q 60 25 70 25 Q 80 25 85 35 Q 88 42 82 48 L 60 65 Q 70 60 85 65"/>
+        <!-- & (ampersand) - FIXED -->
+        <path class="ha-path path-amp" d="M 95 65 Q 80 70 70 60 Q 60 50 65 40 Q 70 30 80 30 Q 90 30 95 40 Q 97 45 90 52 Q 85 57 75 55 L 65 65 M 75 55 L 100 65"/>
         <!-- A -->
         <path class="ha-path path-a" d="M 135 70 L 160 10 L 185 70 M 143 50 L 177 50"/>
       </svg>
@@ -645,7 +645,7 @@
       <div class="closing-text">More to come ISA ... 😊</div>
     </div>
   </div>
-
+  
   <script>
     /* ----- SUSPENSE PAGE LOGIC ----- */
     // Target: 13 Feb 2026, 00:00:00 Egyptian time (UTC+2) = 12 Feb 2026, 22:00 UTC

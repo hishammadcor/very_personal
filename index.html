@@ -524,8 +524,8 @@
         <div class="suspense-dot"></div>
       </div>
     </div>
-    <!-- Suspense music: add your audio file here -->
-    <audio id="suspenseAudio" loop preload="auto">
+    <!-- Suspense music -->
+    <audio id="suspenseAudio" loop preload="auto" autoplay>
       <source src="suspense.mp3" type="audio/mpeg">
     </audio>
   </div>
@@ -664,9 +664,13 @@
         document.getElementById('page0').classList.remove('hidden');
         document.getElementById('page1').classList.add('hidden');
         startSuspenseCountdown();
-        // Try to play suspense music on first interaction
+        // Try to play suspense music immediately
+        playSuspenseOnce();
+        // Fallback: also try on any user interaction (for mobile browsers)
         document.body.addEventListener('click', playSuspenseOnce, { once: true });
         document.body.addEventListener('touchstart', playSuspenseOnce, { once: true });
+        document.body.addEventListener('scroll', playSuspenseOnce, { once: true });
+        document.body.addEventListener('keydown', playSuspenseOnce, { once: true });
       } else {
         // Show main page directly
         document.getElementById('page0').classList.add('hidden');
@@ -674,9 +678,14 @@
       }
     }
 
+    var suspensePlaying = false;
     function playSuspenseOnce() {
-      if (suspenseAudio) {
-        suspenseAudio.play().catch(function(e){ console.log('Suspense audio play failed:', e); });
+      if (suspenseAudio && !suspensePlaying) {
+        suspenseAudio.play().then(function() {
+          suspensePlaying = true;
+        }).catch(function(e){
+          console.log('Suspense audio play failed:', e);
+        });
       }
     }
 

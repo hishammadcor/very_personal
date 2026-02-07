@@ -598,7 +598,11 @@
 
     function checkAndShowSuspense() {
       var now = new Date();
-      if (now < TARGET_DATE) {
+      // TEST MODE: Add ?test to URL to bypass suspense page
+      var urlParams = new URLSearchParams(window.location.search);
+      var testMode = urlParams.has('test') || urlParams.has('skip');
+
+      if (!testMode && now < TARGET_DATE) {
         // Show suspense page
         document.getElementById('page0').classList.remove('hidden');
         document.getElementById('page1').classList.add('hidden');

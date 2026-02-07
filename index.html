@@ -675,8 +675,8 @@
     }
 
     function playSuspenseOnce() {
-      if (suspenseAudio && suspenseAudio.src) {
-        suspenseAudio.play().catch(function(){});
+      if (suspenseAudio) {
+        suspenseAudio.play().catch(function(e){ console.log('Suspense audio play failed:', e); });
       }
     }
 

@@ -191,10 +191,14 @@
       z-index: 160; opacity: 0; transition: opacity 0.6s ease;
       text-align: center;
     }
-    .wait-msg.show { opacity: 1; animation: waitBeat 1s ease-in-out infinite; }
+    .wait-msg.show { opacity: 1; animation: waitBeat 0.6s ease-in-out infinite; }
+    /* Nervous heartbeat: ~100 BPM with lub-dub double-beat pattern */
     @keyframes waitBeat {
       0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.15); }
+      12% { transform: scale(1.15); }
+      24% { transform: scale(1); }
+      36% { transform: scale(1.10); }
+      48% { transform: scale(1); }
     }
 
     /* COUNTDOWN */
@@ -285,13 +289,127 @@
       font-size: 2rem; color: #880e4f; text-align: center;
       line-height: 1.6; padding: 0 30px;
       opacity: 0; transform: translateY(20px);
-      transition: opacity 1s ease, transform 1s ease;
     }
-    .closing-overlay.show .closing-text { opacity: 1; transform: translateY(0); }
+    .closing-overlay.show .closing-text {
+      animation: closingTextAppear 1s ease 2.8s forwards;
+    }
+    @keyframes closingTextAppear {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* H & A Curve Drawing Animation */
+    .closing-content { text-align: center; }
+    .ha-svg {
+      width: 220px; height: 80px; margin-bottom: 20px;
+    }
+    .ha-path {
+      fill: none;
+      stroke: #880e4f;
+      stroke-width: 5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-dasharray: 200;
+      stroke-dashoffset: 200;
+    }
+    .closing-overlay.show .ha-path {
+      animation: drawPath 1.8s ease forwards;
+    }
+    .closing-overlay.show .ha-path.path-amp {
+      animation-delay: 0.6s;
+    }
+    .closing-overlay.show .ha-path.path-a {
+      animation-delay: 1.2s;
+    }
+    @keyframes drawPath {
+      to { stroke-dashoffset: 0; }
+    }
+    .ring-final {
+      font-size: 3.5rem;
+      opacity: 0;
+      transform: scale(0) rotate(-20deg);
+      display: inline-block;
+      margin: 20px 0;
+    }
+    .closing-overlay.show .ring-final {
+      animation: ringPop 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) 2.2s forwards;
+    }
+    @keyframes ringPop {
+      0% { opacity: 0; transform: scale(0) rotate(-20deg); }
+      60% { transform: scale(1.3) rotate(10deg); }
+      100% { opacity: 1; transform: scale(1) rotate(0deg); }
+    }
+
+    /* SUSPENSE LANDING PAGE (page0) */
+    .page0 {
+      min-height: 100vh; min-height: 100dvh; width: 100%;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+      position: relative; overflow: hidden;
+    }
+    .page0::before {
+      content: '';
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      background: radial-gradient(circle at 50% 50%, transparent 0%, rgba(0,0,0,0.4) 100%);
+      pointer-events: none;
+    }
+    .suspense-card {
+      background: rgba(255,255,255,0.05);
+      border: 2px solid rgba(255,255,255,0.1);
+      border-radius: 24px; padding: 40px 30px;
+      max-width: 450px; width: 90%; text-align: center;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+    }
+    .suspense-hint {
+      font-family: Georgia, serif; font-size: 1.1rem;
+      color: rgba(255,255,255,0.6); margin-bottom: 30px;
+      font-style: italic;
+    }
+    .suspense-countdown {
+      display: flex; justify-content: center; gap: 12px; flex-wrap: wrap;
+    }
+    .suspense-unit {
+      background: linear-gradient(135deg, rgba(233,30,99,0.3), rgba(194,24,91,0.3));
+      border: 1px solid rgba(233,30,99,0.4);
+      color: white; border-radius: 16px; padding: 15px 12px; min-width: 70px;
+      box-shadow: 0 4px 20px rgba(233,30,99,0.2);
+    }
+    .suspense-unit .num {
+      font-size: 2.2rem; font-weight: bold; display: block;
+      text-shadow: 0 0 20px rgba(233,30,99,0.5);
+    }
+    .suspense-unit .lbl {
+      font-size: 0.7rem; text-transform: uppercase;
+      opacity: 0.7; display: block; margin-top: 4px;
+    }
+    .suspense-dots {
+      margin-top: 40px; display: flex; justify-content: center; gap: 8px;
+    }
+    .suspense-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: rgba(233,30,99,0.5);
+      animation: suspensePulse 1.5s ease-in-out infinite;
+    }
+    .suspense-dot:nth-child(2) { animation-delay: 0.3s; }
+    .suspense-dot:nth-child(3) { animation-delay: 0.6s; }
+    @keyframes suspensePulse {
+      0%, 100% { opacity: 0.3; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.3); }
+    }
+    .page0-transition {
+      animation: page0FadeOut 1s ease forwards;
+    }
+    @keyframes page0FadeOut {
+      to { opacity: 0; transform: scale(1.1); }
+    }
 
     @media (min-width: 500px) {
       .goodgirl-text { font-size: 4.5rem; }
       .closing-text { font-size: 2.5rem; }
+      .ha-svg { width: 280px; height: 100px; }
+      .ring-final { font-size: 4.5rem; }
+      .suspense-unit .num { font-size: 2.8rem; }
+      .suspense-unit { min-width: 85px; padding: 18px 15px; }
       .wait-msg { font-size: 1.4rem; bottom: 30px; }
     }
     @media (max-width: 360px) {
@@ -299,6 +417,11 @@
       .closing-text { font-size: 1.5rem; }
       .modal-btn { padding: 10px 20px; font-size: 0.95rem; }
       .wait-msg { font-size: 1rem; }
+      .ha-svg { width: 160px; height: 60px; }
+      .ring-final { font-size: 2.5rem; margin: 15px 0; }
+      .suspense-unit .num { font-size: 1.6rem; }
+      .suspense-unit { min-width: 55px; padding: 10px 8px; }
+      .suspense-hint { font-size: 0.95rem; }
     }
     
     /* BACKGROUND ELEMENTS */
@@ -344,7 +467,29 @@
 </head>
 <body>
 
-  <div id="page1" class="page">
+  <!-- SUSPENSE LANDING PAGE -->
+  <div id="page0" class="page0 hidden">
+    <div class="suspense-card">
+      <div class="suspense-hint">Something is coming...</div>
+      <div class="suspense-countdown" id="suspenseCountdown">
+        <div class="suspense-unit"><span class="num" id="s-days">0</span><span class="lbl">Days</span></div>
+        <div class="suspense-unit"><span class="num" id="s-hours">00</span><span class="lbl">Hours</span></div>
+        <div class="suspense-unit"><span class="num" id="s-mins">00</span><span class="lbl">Minutes</span></div>
+        <div class="suspense-unit"><span class="num" id="s-secs">00</span><span class="lbl">Seconds</span></div>
+      </div>
+      <div class="suspense-dots">
+        <div class="suspense-dot"></div>
+        <div class="suspense-dot"></div>
+        <div class="suspense-dot"></div>
+      </div>
+    </div>
+    <!-- Suspense music: add your audio file here -->
+    <audio id="suspenseAudio" loop preload="auto">
+      <!-- <source src="suspense.mp3" type="audio/mpeg"> -->
+    </audio>
+  </div>
+
+  <div id="page1" class="page hidden">
     <div id="bgFlowers1"></div>
     <div class="card">
       <div class="heart-icon">
@@ -430,10 +575,105 @@
 
   <!-- CLOSING MESSAGE -->
   <div id="closingOverlay" class="closing-overlay hidden">
-    <div class="closing-text">More to come ISA ... 😊</div>
+    <div class="closing-content">
+      <svg class="ha-svg" viewBox="0 0 220 80">
+        <!-- H -->
+        <path class="ha-path path-h" d="M 10 10 L 10 70 M 10 40 L 45 40 M 45 10 L 45 70"/>
+        <!-- & -->
+        <path class="ha-path path-amp" d="M 90 55 Q 75 70 65 60 Q 55 50 60 38 Q 65 25 80 25 Q 95 25 100 38 Q 105 50 95 60 L 70 75 Q 85 65 105 70"/>
+        <!-- A -->
+        <path class="ha-path path-a" d="M 135 70 L 160 10 L 185 70 M 143 50 L 177 50"/>
+      </svg>
+      <div class="ring-final">💍</div>
+      <div class="closing-text">More to come ISA ... 😊</div>
+    </div>
   </div>
 
   <script>
+    /* ----- SUSPENSE PAGE LOGIC ----- */
+    // Target: 13 Feb 2026, 00:00:00 Egyptian time (UTC+2) = 12 Feb 2026, 22:00 UTC
+    var TARGET_DATE = new Date(Date.UTC(2026, 1, 12, 22, 0, 0));
+    var suspenseInterval = null;
+    var suspenseAudio = document.getElementById('suspenseAudio');
+
+    function checkAndShowSuspense() {
+      var now = new Date();
+      if (now < TARGET_DATE) {
+        // Show suspense page
+        document.getElementById('page0').classList.remove('hidden');
+        document.getElementById('page1').classList.add('hidden');
+        startSuspenseCountdown();
+        // Try to play suspense music on first interaction
+        document.body.addEventListener('click', playSuspenseOnce, { once: true });
+        document.body.addEventListener('touchstart', playSuspenseOnce, { once: true });
+      } else {
+        // Show main page directly
+        document.getElementById('page0').classList.add('hidden');
+        document.getElementById('page1').classList.remove('hidden');
+      }
+    }
+
+    function playSuspenseOnce() {
+      if (suspenseAudio && suspenseAudio.src) {
+        suspenseAudio.play().catch(function(){});
+      }
+    }
+
+    function startSuspenseCountdown() {
+      updateSuspenseCountdown();
+      suspenseInterval = setInterval(updateSuspenseCountdown, 1000);
+    }
+
+    function updateSuspenseCountdown() {
+      var now = new Date();
+      var diff = Math.floor((TARGET_DATE - now) / 1000);
+
+      if (diff <= 0) {
+        // Countdown complete - transition to main page
+        clearInterval(suspenseInterval);
+        transitionToMain();
+        return;
+      }
+
+      var days  = Math.floor(diff / 86400);
+      var hours = Math.floor((diff % 86400) / 3600);
+      var mins  = Math.floor((diff % 3600) / 60);
+      var secs  = diff % 60;
+
+      document.getElementById('s-days').textContent  = days;
+      document.getElementById('s-hours').textContent = String(hours).padStart(2, '0');
+      document.getElementById('s-mins').textContent  = String(mins).padStart(2, '0');
+      document.getElementById('s-secs').textContent  = String(secs).padStart(2, '0');
+    }
+
+    function transitionToMain() {
+      var page0 = document.getElementById('page0');
+      var page1 = document.getElementById('page1');
+
+      // Fade out suspense audio
+      if (suspenseAudio) {
+        var fadeAudio = setInterval(function() {
+          if (suspenseAudio.volume > 0.1) {
+            suspenseAudio.volume -= 0.1;
+          } else {
+            suspenseAudio.pause();
+            clearInterval(fadeAudio);
+          }
+        }, 100);
+      }
+
+      // Animate out page0
+      page0.classList.add('page0-transition');
+
+      setTimeout(function() {
+        page0.classList.add('hidden');
+        page1.classList.remove('hidden');
+      }, 1000);
+    }
+
+    // Initialize on load
+    checkAndShowSuspense();
+
     /* ----- SVG DATA ----- */
     const flowerSVGs = [
       `<svg width="SIZE" height="SIZE" viewBox="0 0 100 100"><ellipse cx="50" cy="45" rx="20" ry="18" fill="#8B0000"/><ellipse cx="42" cy="42" rx="15" ry="14" fill="#B22222"/><ellipse cx="58" cy="42" rx="15" ry="14" fill="#B22222"/><ellipse cx="50" cy="35" rx="12" ry="12" fill="#DC143C"/><ellipse cx="45" cy="50" rx="14" ry="12" fill="#8B0000"/><ellipse cx="55" cy="50" rx="14" ry="12" fill="#8B0000"/><ellipse cx="50" cy="40" rx="8" ry="10" fill="#FF6B6B"/><path d="M50 58 Q50 75 50 90" stroke="#228B22" stroke-width="3" fill="none"/><ellipse cx="38" cy="70" rx="6" ry="4" fill="#2E8B2E"/></svg>`,

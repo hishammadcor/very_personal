@@ -602,6 +602,129 @@
       100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
     }
 
+    /* ===== TEST PANEL (activated with ?test in URL) ===== */
+    .test-panel {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      z-index: 9999;
+      background: rgba(0,0,0,0.95);
+      border-top: 2px solid var(--gold);
+      padding: 12px 16px;
+      font-family: 'Amiri', serif;
+      direction: ltr;
+      text-align: left;
+      max-height: 50vh;
+      overflow-y: auto;
+      transition: transform 0.3s;
+    }
+
+    .test-panel.collapsed {
+      transform: translateY(calc(100% - 40px));
+    }
+
+    .test-panel-toggle {
+      position: absolute;
+      top: -36px; right: 12px;
+      background: var(--gold);
+      color: var(--bg-dark);
+      border: none;
+      border-radius: 8px 8px 0 0;
+      padding: 6px 16px;
+      font-weight: bold;
+      font-size: 0.8rem;
+      cursor: pointer;
+      font-family: sans-serif;
+    }
+
+    .test-panel h3 {
+      color: var(--gold);
+      font-size: 0.9rem;
+      margin-bottom: 8px;
+      font-family: sans-serif;
+    }
+
+    .test-panel .test-label {
+      color: var(--cream);
+      font-size: 0.75rem;
+      font-family: sans-serif;
+      margin-bottom: 4px;
+      opacity: 0.7;
+    }
+
+    .test-panel .test-status {
+      color: var(--pink-light);
+      font-size: 0.8rem;
+      font-family: monospace;
+      margin-bottom: 10px;
+      padding: 6px 8px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 6px;
+    }
+
+    .test-presets {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+
+    .test-presets button {
+      padding: 6px 12px;
+      background: rgba(255,215,0,0.15);
+      border: 1px solid rgba(255,215,0,0.4);
+      border-radius: 6px;
+      color: var(--gold-light);
+      font-size: 0.75rem;
+      cursor: pointer;
+      font-family: sans-serif;
+      white-space: nowrap;
+    }
+
+    .test-presets button:active {
+      background: rgba(255,215,0,0.3);
+    }
+
+    .test-presets button.active-preset {
+      background: var(--gold);
+      color: var(--bg-dark);
+      font-weight: bold;
+    }
+
+    .test-custom {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .test-custom label {
+      color: var(--cream);
+      font-size: 0.75rem;
+      font-family: sans-serif;
+    }
+
+    .test-custom select, .test-custom input {
+      padding: 4px 8px;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,215,0,0.3);
+      border-radius: 4px;
+      color: var(--cream);
+      font-size: 0.8rem;
+      font-family: sans-serif;
+    }
+
+    .test-custom button {
+      padding: 6px 16px;
+      background: var(--pink);
+      border: none;
+      border-radius: 6px;
+      color: white;
+      font-size: 0.75rem;
+      font-weight: bold;
+      cursor: pointer;
+      font-family: sans-serif;
+    }
+
     /* ===== RESPONSIVE ===== */
     @media (min-width: 500px) {
       .countdown-card { padding: 50px 40px; }
@@ -1341,18 +1464,195 @@
     }
 
     /* ==========================================================
+       TEST MODE — Add ?test to URL to activate
+       Overrides getCairoNow() to simulate any day/time
+       ========================================================== */
+    let testTimeOverride = null; // null = use real time
+
+    // Patch getCairoNow to support test override
+    const _originalGetCairoNow = getCairoNow;
+    getCairoNow = function() {
+      if (testTimeOverride) return new Date(testTimeOverride);
+      return _originalGetCairoNow();
+    };
+
+    function buildTestCairoDate(ramadanDay, hour, minute) {
+      // RAMADAN_START is Feb 18 22:00 UTC = Feb 19 00:00 Cairo
+      // Day 1 Cairo midnight = RAMADAN_START + 2h offset already accounted for
+      // ramadanDay 0 = before Ramadan
+      if (ramadanDay <= 0) {
+        // 3 days before Ramadan, at 14:00 Cairo
+        const d = new Date(RAMADAN_START.getTime() + (2 * 60 * 60 * 1000));
+        d.setDate(d.getDate() - 3);
+        d.setHours(14, 0, 0, 0);
+        return d;
+      }
+      // Day N at given hour:minute Cairo
+      const base = new Date(RAMADAN_START.getTime() + (2 * 60 * 60 * 1000));
+      base.setDate(base.getDate() + (ramadanDay - 1));
+      base.setHours(hour, minute, 0, 0);
+      return base;
+    }
+
+    function testSetTime(ramadanDay, hour, minute) {
+      testTimeOverride = buildTestCairoDate(ramadanDay, hour, minute).getTime();
+      // Also override RAMADAN_START countdown calc if needed
+      resetToPhase(ramadanDay);
+      updateTestStatus();
+    }
+
+    function resetToPhase(ramadanDay) {
+      // Stop everything
+      stopMusic();
+      if (currentAudio) { currentAudio.pause(); currentAudio = null; }
+      if (countdownInterval) { clearInterval(countdownInterval); countdownInterval = null; }
+      closeTafsir();
+
+      // Hide all phases
+      document.getElementById('phase1').classList.add('hidden');
+      document.getElementById('phase2').classList.add('hidden');
+      document.getElementById('phase3').classList.add('hidden');
+
+      // Reset greeting state
+      const gt = document.getElementById('greetingText');
+      gt.classList.remove('show', 'fade-out');
+      gt.style.opacity = '';
+      gt.style.transform = '';
+      document.getElementById('greetingOverlay').classList.remove('hidden');
+      document.getElementById('greetingCard').classList.add('hidden');
+
+      if (ramadanDay <= 0) {
+        // Phase 1: Countdown
+        document.getElementById('phase1').classList.remove('hidden');
+        // For test mode countdown, override Date for diff calc
+        const realDateNow = Date.now;
+        const fakeNow = testTimeOverride;
+        // We need the countdown to tick from our fake "now"
+        // Use a custom countdown that respects testTimeOverride
+        testCountdown();
+      } else if (ramadanDay === 1) {
+        // Phase 2: Greeting (skip localStorage check in test)
+        document.getElementById('phase2').classList.remove('hidden');
+        setTimeout(() => { gt.classList.add('show'); }, 300);
+        setTimeout(() => { gt.classList.remove('show'); gt.classList.add('fade-out'); }, 3500);
+        setTimeout(() => {
+          document.getElementById('greetingOverlay').classList.add('hidden');
+          document.getElementById('greetingCard').classList.remove('hidden');
+        }, 5000);
+      } else {
+        // Phase 3: Verses
+        document.getElementById('phase3').classList.remove('hidden');
+        renderVerses();
+      }
+    }
+
+    function testCountdown() {
+      if (countdownInterval) clearInterval(countdownInterval);
+      function update() {
+        // Use testTimeOverride as "now" but increment it each second
+        if (!testTimeOverride) return;
+        const fakeNow = new Date(testTimeOverride);
+        // Calculate diff from fake now to RAMADAN_START
+        let diff = Math.floor((RAMADAN_START - fakeNow) / 1000) + (2 * 3600); // add Cairo offset
+        if (diff <= 0) {
+          clearInterval(countdownInterval);
+          countdownInterval = null;
+          showPhase2();
+          return;
+        }
+        const days = Math.floor(diff / 86400);
+        const hours = Math.floor((diff % 86400) / 3600);
+        const mins = Math.floor((diff % 3600) / 60);
+        const secs = diff % 60;
+        document.getElementById('ct-days').textContent = days;
+        document.getElementById('ct-hours').textContent = String(hours).padStart(2, '0');
+        document.getElementById('ct-mins').textContent = String(mins).padStart(2, '0');
+        document.getElementById('ct-secs').textContent = String(secs).padStart(2, '0');
+        // Advance fake time by 1 second
+        testTimeOverride += 1000;
+      }
+      update();
+      countdownInterval = setInterval(update, 1000);
+    }
+
+    function updateTestStatus() {
+      const el = document.getElementById('testStatus');
+      if (!el) return;
+      const cairo = getCairoNow();
+      const day = getRamadanDay();
+      const h = String(cairo.getHours()).padStart(2, '0');
+      const m = String(cairo.getMinutes()).padStart(2, '0');
+      const phase = day === 0 ? 'Countdown' : (day === 1 && document.getElementById('phase2').classList.contains('hidden') === false ? 'Greeting' : 'Verses');
+      const iftarStatus = day > 0 ? (isAfterIftar(day - 1) ? 'after iftar' : 'before iftar') : 'N/A';
+      el.textContent = `Day: ${day} | Cairo: ${h}:${m} | Phase: ${phase} | ${iftarStatus}`;
+
+      // Highlight active preset
+      document.querySelectorAll('.test-presets button').forEach(b => b.classList.remove('active-preset'));
+    }
+
+    function createTestPanel() {
+      const panel = document.createElement('div');
+      panel.className = 'test-panel';
+      panel.innerHTML = `
+        <button class="test-panel-toggle" onclick="this.parentElement.classList.toggle('collapsed')">TEST PANEL</button>
+
+        <h3>Time Travel Test Panel</h3>
+        <div class="test-status" id="testStatus">Using real time</div>
+
+        <div class="test-label">QUICK PRESETS:</div>
+        <div class="test-presets">
+          <button onclick="testSetTime(0, 14, 0)">Before Ramadan</button>
+          <button onclick="testSetTime(1, 10, 0)">Day 1 Morning</button>
+          <button onclick="testSetTime(1, 18, 0)">Day 1 After Iftar</button>
+          <button onclick="testSetTime(2, 18, 0)">Day 2 After Iftar</button>
+          <button onclick="testSetTime(3, 18, 0)">Day 3 After Iftar</button>
+          <button onclick="testSetTime(5, 12, 0)">Day 5 Before Iftar</button>
+          <button onclick="testSetTime(5, 18, 0)">Day 5 After Iftar</button>
+          <button onclick="testSetTime(10, 18, 5)">Day 10 After Iftar</button>
+          <button onclick="testSetTime(15, 18, 5)">Day 15 After Iftar</button>
+          <button onclick="testSetTime(20, 18, 5)">Day 20 After Iftar</button>
+          <button onclick="testSetTime(27, 18, 5)">Day 27 After Iftar</button>
+          <button onclick="testSetTime(30, 18, 10)">Day 30 After Iftar</button>
+        </div>
+
+        <div class="test-label">CUSTOM:</div>
+        <div class="test-custom">
+          <label>Day:</label>
+          <select id="testDay">
+            <option value="0">Before Ramadan</option>
+            ${Array.from({length: 30}, (_, i) => `<option value="${i+1}">Day ${i+1}</option>`).join('')}
+          </select>
+          <label>Time:</label>
+          <input type="time" id="testTime" value="18:00">
+          <button onclick="const d=+document.getElementById('testDay').value; const t=document.getElementById('testTime').value.split(':'); testSetTime(d, +t[0], +t[1]);">Apply</button>
+          <button onclick="testTimeOverride=null; location.reload();" style="background: #666;">Reset to Real</button>
+        </div>
+      `;
+      document.body.appendChild(panel);
+    }
+
+    /* ==========================================================
        INITIALIZATION
        ========================================================== */
     function init() {
       createStars();
       startFallingStars();
 
+      // Activate test panel if ?test is in URL
+      if (window.location.search.includes('test')) {
+        createTestPanel();
+      }
+
       const ramadanDay = getRamadanDay();
 
       if (ramadanDay === 0) {
         // Before Ramadan → show countdown
         document.getElementById('phase1').classList.remove('hidden');
-        startCountdown();
+        if (testTimeOverride) {
+          testCountdown();
+        } else {
+          startCountdown();
+        }
         // Play Ramadan music from 0:08
         const music = document.getElementById('ramadanMusic');
         music.currentTime = 8;

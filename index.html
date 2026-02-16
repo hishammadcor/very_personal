@@ -325,13 +325,157 @@
       margin-bottom: 12px;
     }
 
+    .verse-actions {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 12px;
+      flex-wrap: wrap;
+    }
+
     .audio-player {
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 12px;
-      margin-top: 8px;
     }
+
+    .tafsir-btn {
+      padding: 8px 20px;
+      background: linear-gradient(135deg, rgba(233,30,99,0.2), rgba(233,30,99,0.1));
+      border: 1.5px solid var(--pink);
+      border-radius: 50px;
+      color: var(--pink-light);
+      font-family: 'Aref Ruqaa', serif;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .tafsir-btn:active {
+      transform: scale(0.95);
+      background: rgba(233,30,99,0.3);
+    }
+
+    /* ===== TAFSIR OVERLAY ===== */
+    .tafsir-overlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.85);
+      z-index: 500;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      animation: fadeIn 0.3s ease-out;
+    }
+
+    .tafsir-container {
+      background: linear-gradient(145deg, #2d1b69, #1a0a2e);
+      border: 2px solid var(--gold);
+      border-radius: 20px;
+      max-width: 600px;
+      width: 100%;
+      max-height: 85vh;
+      max-height: 85dvh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .tafsir-header {
+      padding: 20px 20px 12px;
+      text-align: center;
+      border-bottom: 1px solid rgba(255,215,0,0.2);
+      flex-shrink: 0;
+    }
+
+    .tafsir-header h2 {
+      font-family: 'Aref Ruqaa', serif;
+      font-size: 1.4rem;
+      color: var(--gold);
+      margin-bottom: 4px;
+    }
+
+    .tafsir-header .tafsir-ref {
+      font-family: 'Amiri', serif;
+      font-size: 0.9rem;
+      color: var(--pink-light);
+    }
+
+    .tafsir-body {
+      padding: 20px;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      flex: 1;
+    }
+
+    .tafsir-ayah-text {
+      font-family: 'Amiri', serif;
+      font-size: 1.2rem;
+      color: var(--gold-light);
+      line-height: 2.2;
+      text-align: center;
+      padding: 16px;
+      margin-bottom: 16px;
+      background: rgba(255,215,0,0.05);
+      border-radius: 12px;
+      border: 1px solid rgba(255,215,0,0.15);
+    }
+
+    .tafsir-content {
+      font-family: 'Amiri', serif;
+      font-size: 1.05rem;
+      color: var(--cream);
+      line-height: 2.2;
+      text-align: justify;
+    }
+
+    .tafsir-loading {
+      text-align: center;
+      padding: 40px;
+      color: var(--gold);
+      font-family: 'Amiri', serif;
+      font-size: 1.1rem;
+    }
+
+    .tafsir-loading::after {
+      content: '';
+      display: block;
+      width: 30px; height: 30px;
+      border: 3px solid rgba(255,215,0,0.2);
+      border-top-color: var(--gold);
+      border-radius: 50%;
+      margin: 16px auto 0;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .tafsir-close {
+      padding: 14px;
+      text-align: center;
+      border-top: 1px solid rgba(255,215,0,0.2);
+      flex-shrink: 0;
+    }
+
+    .tafsir-close button {
+      padding: 10px 36px;
+      background: linear-gradient(135deg, var(--gold), #e6c200);
+      color: var(--bg-dark);
+      font-family: 'Aref Ruqaa', serif;
+      font-size: 1rem;
+      font-weight: bold;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+    }
+
+    .tafsir-close button:active { transform: scale(0.95); }
 
     .play-btn {
       width: 48px;
@@ -480,6 +624,9 @@
       .greeting-card .message { font-size: 1rem; }
       .verse-text { font-size: 1.1rem; }
       .verse-card { padding: 18px 14px; }
+      .tafsir-header h2 { font-size: 1.2rem; }
+      .tafsir-content { font-size: 0.95rem; }
+      .tafsir-overlay { padding: 10px; }
     }
   </style>
 </head>
@@ -948,10 +1095,7 @@
        PHASE 2: GREETING CARD
        ========================================================== */
     function showPhase2() {
-      // Stop Ramadan music when leaving Phase 1
-      const music = document.getElementById('ramadanMusic');
-      music.pause();
-      music.currentTime = 0;
+      stopMusic();
       document.getElementById('phase1').classList.add('hidden');
       document.getElementById('phase2').classList.remove('hidden');
 
@@ -981,6 +1125,7 @@
     let currentPlayBtn = null;
 
     function showPhase3() {
+      stopMusic();
       document.getElementById('phase2').classList.add('hidden');
       document.getElementById('phase3').classList.remove('hidden');
       renderVerses();
@@ -1016,15 +1161,22 @@
         card.style.animation = `slideUp 0.5s ease-out ${i * 0.05}s both`;
 
         if (isUnlocked) {
+          const cardId = `verse-card-${dayNum}`;
+          card.id = cardId;
           card.innerHTML = `
             <div class="verse-day ${dayNum < currentDay ? 'past' : ''}">اليوم ${dayNum}</div>
-            <div class="verse-text">${verse.text}</div>
+            <div class="verse-text" id="vtext-${dayNum}">${verse.text}</div>
             <div class="verse-reference">سورة ${verse.surah} — الآية ${verse.ayah}</div>
-            <div class="audio-player">
-              <button class="play-btn" onclick="toggleAudio(this, ${verse.surahNum}, ${verse.ayahNum})" aria-label="تشغيل">▶</button>
-              <span class="audio-label">الشيخ المنشاوي</span>
+            <div class="verse-actions">
+              <div class="audio-player">
+                <button class="play-btn" onclick="toggleAudio(this, ${verse.surahNum}, ${verse.ayahNum})" aria-label="تشغيل">▶</button>
+                <span class="audio-label">الشيخ المنشاوي</span>
+              </div>
+              <button class="tafsir-btn" onclick="openTafsir(${verse.surahNum}, ${verse.ayahNum}, '${verse.surah}', '${verse.ayah}')">تفسير القرطبي</button>
             </div>
           `;
+          // Fetch full ayah text from API
+          fetchAyahText(verse.surahNum, verse.ayahNum, dayNum);
         } else {
           // Today but before iftar
           card.innerHTML = `
@@ -1087,6 +1239,105 @@
         currentAudio = null;
         currentPlayBtn = null;
       });
+    }
+
+    /* ==========================================================
+       FETCH AYAH TEXT FROM API
+       ========================================================== */
+    const ayahCache = {};
+
+    function fetchAyahText(surahNum, ayahNum, dayNum) {
+      const key = `${surahNum}:${ayahNum}`;
+      if (ayahCache[key]) {
+        const el = document.getElementById(`vtext-${dayNum}`);
+        if (el) el.textContent = ayahCache[key];
+        return;
+      }
+      fetch(`https://api.alquran.cloud/v1/ayah/${surahNum}:${ayahNum}/quran-uthmani`)
+        .then(r => r.json())
+        .then(data => {
+          if (data.code === 200 && data.data && data.data.text) {
+            ayahCache[key] = data.data.text;
+            const el = document.getElementById(`vtext-${dayNum}`);
+            if (el) el.textContent = data.data.text;
+          }
+        })
+        .catch(() => {}); // Keep fallback text on failure
+    }
+
+    /* ==========================================================
+       TAFSIR OVERLAY
+       ========================================================== */
+    function openTafsir(surahNum, ayahNum, surahName, ayahLabel) {
+      // Remove existing overlay if any
+      const existing = document.getElementById('tafsirOverlay');
+      if (existing) existing.remove();
+
+      const overlay = document.createElement('div');
+      overlay.className = 'tafsir-overlay';
+      overlay.id = 'tafsirOverlay';
+      overlay.innerHTML = `
+        <div class="tafsir-container">
+          <div class="tafsir-header">
+            <h2>تفسير القرطبي</h2>
+            <div class="tafsir-ref">سورة ${surahName} — الآية ${ayahLabel}</div>
+          </div>
+          <div class="tafsir-body" id="tafsirBody">
+            <div class="tafsir-loading">جارٍ تحميل التفسير...</div>
+          </div>
+          <div class="tafsir-close">
+            <button onclick="closeTafsir()">إغلاق</button>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(overlay);
+      // Prevent background scroll
+      document.body.style.overflow = 'hidden';
+
+      // Close on overlay background click
+      overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) closeTafsir();
+      });
+
+      // Fetch tafsir and ayah text
+      const ayahKey = `${surahNum}:${ayahNum}`;
+      const ayahTextPromise = ayahCache[ayahKey]
+        ? Promise.resolve(ayahCache[ayahKey])
+        : fetch(`https://api.alquran.cloud/v1/ayah/${surahNum}:${ayahNum}/quran-uthmani`)
+            .then(r => r.json())
+            .then(d => d.code === 200 ? d.data.text : '')
+            .catch(() => '');
+
+      const tafsirPromise = fetch(`https://api.alquran.cloud/v1/ayah/${surahNum}:${ayahNum}/ar.qurtubi`)
+        .then(r => r.json())
+        .then(d => d.code === 200 ? d.data.text : 'تعذر تحميل التفسير')
+        .catch(() => 'تعذر تحميل التفسير. تأكدي من الاتصال بالإنترنت.');
+
+      Promise.all([ayahTextPromise, tafsirPromise]).then(([ayahText, tafsirText]) => {
+        const body = document.getElementById('tafsirBody');
+        if (!body) return;
+        body.innerHTML = `
+          ${ayahText ? `<div class="tafsir-ayah-text">${ayahText}</div>` : ''}
+          <div class="tafsir-content">${tafsirText}</div>
+        `;
+      });
+    }
+
+    function closeTafsir() {
+      const overlay = document.getElementById('tafsirOverlay');
+      if (overlay) overlay.remove();
+      document.body.style.overflow = '';
+    }
+
+    /* ==========================================================
+       STOP MUSIC HELPER
+       ========================================================== */
+    function stopMusic() {
+      const music = document.getElementById('ramadanMusic');
+      if (music) {
+        music.pause();
+        music.currentTime = 0;
+      }
     }
 
     /* ==========================================================

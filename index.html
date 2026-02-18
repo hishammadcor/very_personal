@@ -1689,10 +1689,9 @@
         music.play().catch(() => { document.addEventListener('click', playMusic); document.addEventListener('touchstart', playMusic); });
         // When music loops, reset to 0:08
         music.addEventListener('timeupdate', () => { if (music.currentTime < 8) music.currentTime = 8; });
-      } else if ((greetingWindow || ramadanDay === 1) && !localStorage.getItem('ramadan2026_greeted')) {
-        // Wed evening after Maghrib OR Day 1 first visit → show greeting
+      } else if (greetingWindow || ramadanDay === 1) {
+        // Wed evening after Maghrib OR Day 1 → always show greeting first
         document.getElementById('phase2').classList.remove('hidden');
-        localStorage.setItem('ramadan2026_greeted', 'true');
         setTimeout(() => {
           document.getElementById('greetingText').classList.add('show');
         }, 300);
